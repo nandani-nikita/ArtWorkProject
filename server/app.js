@@ -1,7 +1,14 @@
-const {connection} = require('./db');
+require('./DBs/connections');
+
 const express = require('express');
-const app = express();
 const port = 8080;
+const cors = require('cors');
+
+const app = express();
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(cors());
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
@@ -12,16 +19,3 @@ app.listen(port, () => {
 });
 
 
-// // var query = `INSERT INTO accounts (user_id,username,password,email,created_on)
-// // VALUES (25,'vghvjbk','ghv',' njbhbkh','2022-05-15')`
-// // connection.query(query, (err) => {
-// //     console.log(err,"\n\n");
-// //   });
-
-// connection.query("SELECT * from accounts", (err, res) => {
-//     console.log(err,"\n\n");
-//     for (let row in res.rows) {
-//         console.log(res.rows[row]);
-//     }
-//     // connection.end();
-//   });
