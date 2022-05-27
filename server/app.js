@@ -1,7 +1,7 @@
 require('./DBs/connections');
 
 const express = require('express');
-const port = 8080;
+const port = process.env.PORT;
 const cors = require('cors');
 
 const app = express();
