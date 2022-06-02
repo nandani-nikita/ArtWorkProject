@@ -36,6 +36,8 @@ conn.connect(function (err) {
 //   }
 
 // }
+
+
 // const createUserTable = `
 //     CREATE TABLE IF NOT EXISTS users (
 // 	    id uuid DEFAULT uuid_generate_v4(),
@@ -44,6 +46,7 @@ conn.connect(function (err) {
 //       dob DATE NOT NULL,
 //       phone BIGINT NOT NULL CHECK (phone> 0),
 //       password TEXT NOT NULL,
+//       signup_medium TEXT DEFAULT 'inapp',
 // 	    PRIMARY KEY (id),
 //       CONSTRAINT email_unique UNIQUE (email),
 //       CONSTRAINT phone_unique UNIQUE (phone)

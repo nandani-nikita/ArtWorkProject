@@ -3,11 +3,23 @@ const isValidEmail = function (email) {
     return regexp.test(String(email).toLowerCase());
 }
 const isValidPassword = function (password) {
-    const regexp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,12}$/;
-    return regexp.test(String(password));
+    var re = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,12}$/;
+    return re.test(password);
 }
-
+const isValidPhone = function (phone) {
+    var re = /^\d{10}$/;
+    return re.test(phone);
+}
+const isValidDate = function (date) {
+    var newDate = new Date(date)
+    if (newDate.toDateString() === 'Invalid Date') {
+        return false;
+    }
+    return true;
+}
 module.exports = {
     isValidEmail,
-    isValidPassword
+    isValidPassword,
+    isValidPhone,
+    isValidDate
 }

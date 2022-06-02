@@ -15,22 +15,21 @@ const signIn = async (req, res) => {
         }
 
         let checkValidEmail = utility.isValidEmail(req.body.username);
-        if(!checkValidEmail) {
+        if (!checkValidEmail) {
             return res.status(406).json({
                 error: "Invalid Email Format"
             });
         }
-        // let checkValidPassword = utility.isValidEmail(req.body.password);
-        // if(!checkValidPassword) {
-        //     return res.status(406).json({
-        //         error: "Password must contain at least one uppercase letter, one lowercase letter, one number and one special character; special characters allowed: @$!%*?&"
-        //     });
-        // }
+        let checkValidPassword = utility.isValidPassword(req.body.password);
+        if (!checkValidPassword) {
+            return res.status(406).json({
+                error: "Password length is minimum 8 characters and maximum 12 characters. Passowrd must contain at least one uppercase letter, one lowercase letter, one number and one special character; special characters allowed: !@#$%^&*"
+            });
+        }
+
         let validUser = await userService.signInService(req.body);
 
-        // console.log(validUser);
         if ('error' in validUser) {
-            console.log('false');
             return res.status(406).json({ error: validUser.error })
         }
 
@@ -43,13 +42,65 @@ const signIn = async (req, res) => {
         });
 
     } catch (error) {
-        console.log("error occurred",error);
         res.status(406).json(error);
     }
 };
 
+const registerUser = async (req, res) => {
+    try {
+        console.log('Register User Api');
+        if (!(req.body.name && req.body.email && req.body.password && req.body.mobile && req.body.dob)) {
+            return res.status(406).json({
+                error: "Invalid Input. Fields required: name, email, password, mobile, dob."
+            });
+        }
 
+        let checkValidEmail = utility.isValidEmail(req.body.email);
+        if (!checkValidEmail) {
+            return res.status(406).json({
+                error: "Invalid Email Format"
+            });
+        }
+        let checkValidPassword = utility.isValidPassword(req.body.password);
+        if (!checkValidPassword) {
+            return res.status(406).json({
+                error: "Password length is minimum 8 characters and maximum 12 characters. Passowrd must contain at least one uppercase letter, one lowercase letter, one number and one special character; special characters allowed: !@#$%^&*"
+            });
+        }
+        let checkValidPhone = utility.isValidPhone(req.body.mobile);
+        if (!checkValidPhone) {
+            return res.status(406).json({
+                error: "Invalid Phone Number"
+            });
+        }
+
+        let checkValidDob = utility.isValidDate(req.body.dob);
+        if (!checkValidDob) {
+            return res.status(406).json({
+                error: "Invalid Date Of Birth. Please enter your dob in the format: YYYY-MM-DD or YYYY/MM/DD or YYYY.MM.DD"
+            });
+        }
+
+        let user = await userService.registerUserService(req.body);
+
+        if ('error' in user) {
+            return res.status(406).json({ error: user.error })
+        }
+
+        res.status(200).json({
+            msg: user.msg,
+            name: user.name,
+            email: user.email,
+            mobile: user.mobile,
+            dob: user.dob
+        });
+
+    } catch (error) {
+        res.status(406).json(error);
+    }
+};
 
 module.exports = {
-    signIn
+    signIn,
+    registerUser
 }
