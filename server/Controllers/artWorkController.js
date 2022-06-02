@@ -39,7 +39,7 @@ const uploadNew = async (req, res) => {
             })
         }
 
-        avatar.mv('./artworks/' + avatar.name);
+        // avatar.mv('./artworks/' + avatar.name);
         const uploadArtWork = await artWorkService.uploadArtWorkService(validUser, req.body, req.files);
         if ('error' in uploadArtWork) {
             return res.status(406).json({ error: uploadArtWork.error });
