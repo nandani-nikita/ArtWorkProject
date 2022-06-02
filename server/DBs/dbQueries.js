@@ -3,12 +3,8 @@ const findFunction = async (table) => {
     try {
         const findQuery = `select * from ${table}`
         var data = await conn.query(findQuery);
-        console.log('Table exists', data.rows);
-        // console.log('finding', data.rows);
         return { msg: data.rows };
     } catch (e) {
-        console.log('error occured while finding table: ', e);
-        // console.log(e);
         return { error: e };
     }
 
@@ -23,7 +19,6 @@ const findOnConditionFunction = async (table, whereClause) => {
         }
         return null;
     } catch (e) {
-        console.log('error occured while finding table: ', e);
         return { error: e };
     }
 
@@ -32,24 +27,10 @@ const findOnConditionFunction = async (table, whereClause) => {
 const insertFunction = async (table, columns, values) => {
 
     try {
-
         const insertQuery = `insert into ${table} (${columns}) values (${values});`
-
-        // const insert = await conn.query(insertQuery, (err) => {
-        //     if (!err) {
-        //         console.log('data added');
-        //         return { msg: 'Inserted' }
-        //     } else {
-        //         console.log('error occured: ', err);
-        //         return { error: err };
-        //     }
-        // });
         const insert = await conn.query(insertQuery);
-        console.log('-------------------');
-        console.log("\n\n\n", insert);
-        return {msg: true};
+        return {msg: true, data: insert};
     } catch (e) {
-        // console.log('catch error: ', e);
         return { error: e };
     }
 

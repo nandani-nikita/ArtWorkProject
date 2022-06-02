@@ -46,7 +46,6 @@ async function registerUserService(body) {
             const insertUserValues = `'${body.name}','${body.email}','${await hashPassword(body.password)}','${body.mobile}','${body.dob}','${signUpMedium}'`;
             const saveData = await dbQueries.insertFunction('users', insertUserColumns, insertUserValues);
 
-            console.log("----------------",saveData);
             if ('error' in saveData) {
                 return saveData
             }
@@ -68,129 +67,7 @@ async function registerUserService(body) {
 }
 
 
-// async function adminRemoveService() {
-//     try {
-//         var userAvailable = await AdminSch.findOneAndUpdate({
-//             $and: [{
-//                 $or: [
-//                     { email: body.email },
-//                     { username: body.username }
-//                 ]
-//             }, { role: (body.role).toUpperCase() }]
-//         }, {
-//             $set: {
-//                 isActive: false
-//             }
-//         }, { new: true });
-
-//         if (!userAvailable) {
-//             return { error: `${(body.role).toUpperCase()} NOT found with given email or username` };
-//         }
-//         return userAvailable;
-//     } catch (e) {
-//         console.log(`catch error : ${e}`);
-//         return { error: e.toString() }
-//     }
-// }
-
-// async function getAllAdminService() {
-//     try {
-//         var admins = await AdminSch.find({
-//             $or: [{ role: "ADMIN" }, { role: "STAFF" }]
-//         });
-//         console.log(admins);
-//         return admins
-//     } catch (e) {
-//         return { error: e }
-//     }
-// }
-
-// async function getAdminDataService(body) {
-//     try {
-//         var admin = await AdminSch.findOne({
-//             $and: [{
-//                 $or: [
-//                     { email: body.email },
-//                     { username: body.username }
-//                 ]
-//             }, { role: (body.role).toUpperCase() }]
-//         });
-
-//         if (!admin) {
-//             return { error: `${(body.role).toUpperCase()} Profile Not Found` }
-//         }
-//         return admin;
-
-
-//     } catch (e) {
-//         return { error: e }
-//     }
-// }
-
-// async function adminUpdateService(body) {
-//     try {
-//         var adminUpdate = await AdminSch.findOneAndUpdate({
-//             $and: [{
-//                 $or: [
-//                     { email: body.email },
-//                     { username: body.username }
-//                 ]
-//             }, {
-//                 $or: [
-//                     { role: "ADMIN" },
-//                     { role: "STAFF" }
-//                 ]
-//             }]
-//         }, {
-//             // username: body.username,
-//             dob: body.dob,
-//             address: body.address,
-//             mobile: body.mobile,
-//         }, { new: true });
-//         console.log("updated data", adminUpdate);
-//         if (!adminUpdate) {
-//             return { error: "Email or username entered is incorrect. Please try a correct one" }
-//         }
-//         return adminUpdate;
-
-
-//     } catch (e) {
-//         console.log(e);
-//         return { error: e.toString() }
-//     }
-// }
-
-
-// async function getMyInfoService(username, role) {
-//     try {
-//         var admin = await AdminSch.findOne({
-//             $and: [
-//                 { username: username },
-//                 { role: role }]
-//         }, {
-//             _id: 0,
-//             password: 0,
-//             __v: 0
-//         });
-
-//         if (!admin) {
-//             return { error: `${(body.role).toUpperCase()} Profile Not Found` }
-//         }
-//         return admin;
-
-
-//     } catch (e) {
-//         return { error: e }
-//     }
-// }
-
 module.exports = {
     signInService,
-    registerUserService,
-    // adminRegisterService,
-    // adminRemoveService,
-    // getAllAdminService,
-    // getAdminDataService,
-    // adminUpdateService,
-    // getMyInfoService
+    registerUserService
 }
