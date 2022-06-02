@@ -62,9 +62,9 @@ conn.connect(function (err) {
 //       description TEXT,
 // 	    uploaded_by uuid NOT NULL,
 //       uploaded_on DATE NOT NULL,
-//       likes_count INTEGER NOT NULL CHECK (likes_count> 0),
-//       comments_count INTEGER NOT NULL CHECK (comments_count> 0),
-// 	    average_ratings FLOAT(2) NOT NULL CHECK (average_ratings> 0),
+//       likes_count INTEGER DEFAULT 0 CHECK (likes_count>= 0),
+//       comments_count INTEGER DEFAULT 0 CHECK (comments_count>= 0),
+// 	    average_ratings FLOAT(2) DEFAULT 0 CHECK (average_ratings>= 0),
 //       CONSTRAINT fk_uploaded_by
 //         FOREIGN KEY(uploaded_by) 
 // 	        REFERENCES users(id)

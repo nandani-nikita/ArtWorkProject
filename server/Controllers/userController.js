@@ -33,7 +33,6 @@ const signIn = async (req, res) => {
             return res.status(406).json({ error: validUser.error })
         }
 
-        console.log('true');
         res.status(200).json({
             msg: "Login Successful",
             name: validUser.name,

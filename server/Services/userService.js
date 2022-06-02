@@ -8,20 +8,18 @@ async function signInService(body) {
 
         var validUser = (await conn.query(`select * from users where email='${body.username}'`)).rows[0];
 
-        console.log(validUser, validUser.password);
         if (!validUser) {
             return { error: "Invalid User Id" };
         }
 
         var validPassword = await comparePassword(body.password, validUser.password);
-        console.log(validPassword);
         if (!validPassword) {
             validUser = { error: "Wrong Password" };
             return validUser;
         }
 
         var login = {
-            loginId: validUser['user_id'],
+            loginId: validUser['id'],
             loginName: validUser['name'],
             loginEmail: validUser['email']
         }
