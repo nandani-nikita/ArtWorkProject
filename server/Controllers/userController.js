@@ -54,6 +54,12 @@ const registerUser = async (req, res) => {
             });
         }
 
+        let checkValidName = utility.isValidTextContent(req.body.name);
+        if (!checkValidName) {
+            return res.status(406).json({
+                error: "Invalid Name String"
+            });
+        }
         let checkValidEmail = utility.isValidEmail(req.body.email);
         if (!checkValidEmail) {
             return res.status(406).json({
@@ -79,8 +85,8 @@ const registerUser = async (req, res) => {
                 error: "Invalid Date Of Birth. Please enter your dob in the format: YYYY-MM-DD or YYYY/MM/DD or YYYY.MM.DD"
             });
         }
-        
-        if(req.files) {
+
+        if (req.files) {
             const checkValidFile = utility.isValidFile(req.files.profilePicture);
             if ('error' in checkValidFile) {
                 return res.status(406).json({ error: checkValidFile.error });
