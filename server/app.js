@@ -18,10 +18,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const routers = require('./Routers/routes');
 const userRouter = require('./Routers/userRoutes');
 const artWorkRouter = require('./Routers/artWorkRoutes');
+const commentRouter = require('./Routers/commentRoutes');
 
 app.use('/', routers);
 app.use('/user', userRouter);
 app.use('/art', artWorkRouter);
+app.use('/comment', commentRouter);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

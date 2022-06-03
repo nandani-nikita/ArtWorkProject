@@ -78,9 +78,9 @@ conn.connect(function (err) {
 //     CREATE TABLE IF NOT EXISTS comments (
 // 	    id uuid DEFAULT uuid_generate_v4(),
 // 	    art_id uuid NOT NULL,
-// 	    comment TEXT NOT NULL,
-//       is_liked BOOLEAN NOT NULL,
-//       ratings INTEGER NOT NULL,
+// 	    comment TEXT,
+//       is_liked BOOLEAN,
+//       ratings INTEGER DEFAULT 0 CHECK (ratings>= 0),
 //       comment_by uuid NOT NULL,
 //       commented_on TEXT NOT NULL,
 // 	    PRIMARY KEY (id),
