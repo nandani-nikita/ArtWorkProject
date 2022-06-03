@@ -2,7 +2,7 @@ require('./DBs/connections');
 
 const express= require("express");
 const dotenv =require("dotenv");
-dotenv.config({path:'./.env'})
+dotenv.config({path:'./.env'});
 const bodyParser = require("body-parser");
 const cors = require('cors');
 const port = process.env.PORT;

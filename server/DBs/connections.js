@@ -46,6 +46,7 @@ conn.connect(function (err) {
 //       dob DATE NOT NULL,
 //       phone BIGINT NOT NULL CHECK (phone> 0),
 //       password TEXT NOT NULL,
+//       profile_picture TEXT ,
 //       signup_medium TEXT DEFAULT 'inapp',
 // 	    PRIMARY KEY (id),
 //       CONSTRAINT email_unique UNIQUE (email),

@@ -79,8 +79,14 @@ const registerUser = async (req, res) => {
                 error: "Invalid Date Of Birth. Please enter your dob in the format: YYYY-MM-DD or YYYY/MM/DD or YYYY.MM.DD"
             });
         }
-
-        let user = await userService.registerUserService(req.body);
+        
+        if(req.files) {
+            const checkValidFile = utility.isValidFile(req.files.profilePicture);
+            if ('error' in checkValidFile) {
+                return res.status(406).json({ error: checkValidFile.error });
+            }
+        }
+        let user = await userService.registerUserService(req.body, req.files);
 
         if ('error' in user) {
             return res.status(406).json({ error: user.error })
@@ -91,7 +97,8 @@ const registerUser = async (req, res) => {
             name: user.name,
             email: user.email,
             mobile: user.mobile,
-            dob: user.dob
+            dob: user.dob,
+            profilePicture: user.profilePicture
         });
 
     } catch (error) {

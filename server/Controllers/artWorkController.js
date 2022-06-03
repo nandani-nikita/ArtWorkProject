@@ -2,6 +2,7 @@ const { conn } = require('../DBs/db');
 const dbQueries = require('../DBs/dbQueries');
 const { hashPassword, comparePassword } = require('../Controllers/hashed');
 const { generateToken, verifyToken } = require('../Controllers/jwt');
+const utility = require('./utility');
 
 const artWorkService = require('../Services/artWorkService');
 
@@ -17,29 +18,12 @@ const uploadNew = async (req, res) => {
                 error: 'No file uploaded'
             });
         }
-        let avatar = req.files.artWork;
 
-        const fileExtensions = ['png', 'jpeg', 'jpg'];
-        const mimeTypes = ['image/png', 'image/jpeg', 'image/jpg'];
-        const maxSize = 5;
-
-
-        const uploadFileExtension = avatar.name.split('.');
-        const uploadFileMimeType = avatar.mimetype;
-
-        if(uploadFileExtension.length>2 || !fileExtensions.includes(uploadFileExtension[1]) || !mimeTypes.includes(uploadFileMimeType)) {
-            return res.status(406).json({
-                error: "Please check the filename and extension. Allowed types: png, jpeg, jpg"
-            })
+        const checkValidFile = utility.isValidFile(req.files.artWork);
+        if ('error' in checkValidFile) {
+            return res.status(406).json({ error: checkValidFile.error });
         }
-       
-        if((avatar.size / (1024 * 1024)) > maxSize) {
-            return res.status(406).json({
-                error: "File too large"
-            })
-        }
-
-        // avatar.mv('./artworks/' + avatar.name);
+        
         const uploadArtWork = await artWorkService.uploadArtWorkService(validUser, req.body, req.files);
         if ('error' in uploadArtWork) {
             return res.status(406).json({ error: uploadArtWork.error });

@@ -3,6 +3,6 @@
 # dependencies
 
 /node_modules
-
+/Alphabets
 # dotenv environment variables file
 .env

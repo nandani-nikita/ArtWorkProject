@@ -1,14 +1,15 @@
 const { conn } = require('../DBs/db');
 const dbQueries = require('../DBs/dbQueries');
+const dotenv =require("dotenv");
+dotenv.config({path:'./.env'});
 const { hashPassword, comparePassword } = require('../Controllers/hashed');
-const fs = require('fs');
 const { generateToken, verifyToken } = require('../Controllers/jwt');
 const { v4: uuidv4 } = require('uuid');
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-})
+});
 async function uploadArtWorkService(user, body, files) {
     try {
         const avatar = files.artWork;
@@ -18,7 +19,7 @@ async function uploadArtWorkService(user, body, files) {
         // const fileContent = fs.readFileSync(avatar)
         const params = {
             Bucket: process.env.AWS_BUCKET_NAME,
-            Key: `${avatarId}.${extenstion}`,
+            Key: `artWorks/${user.id}/${avatarId}.${extenstion}`,
             Body: fileContent
         }
 

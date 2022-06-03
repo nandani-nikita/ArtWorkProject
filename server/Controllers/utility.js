@@ -17,9 +17,34 @@ const isValidDate = function (date) {
     }
     return true;
 }
+
+const isValidFile = function(avatar) {
+        const fileExtensions = ['png', 'jpeg', 'jpg'];
+        const mimeTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+        const maxSize = 5;
+
+
+        const uploadFileExtension = avatar.name.split('.');
+        const uploadFileMimeType = avatar.mimetype;
+
+        if(uploadFileExtension.length>2 || !fileExtensions.includes(uploadFileExtension[1]) || !mimeTypes.includes(uploadFileMimeType)) {
+            return {
+                error: "Please check the filename and extension. Allowed types: png, jpeg, jpg"
+            }
+        }
+       
+        if((avatar.size / (1024 * 1024)) > maxSize) {
+            return {
+                error: "File too large"
+            }
+        }
+
+        return {msg:"Valid File"}
+}
 module.exports = {
     isValidEmail,
     isValidPassword,
     isValidPhone,
-    isValidDate
+    isValidDate,
+    isValidFile
 }
