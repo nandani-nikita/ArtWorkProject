@@ -6,11 +6,15 @@ async function getAllComments(artId) {
         const data = await conn.query(`SELECT * FROM comments WHERE art_id='${artId}' ORDER BY commented_on DESC;`);
 
         const reactions = await getTotalReactionCount(artId);
-        return { msg: "Comments Found",
-        comments: data.rows,
-        commentsCount: reactions.commentCount,
-        likesCount: reactions.likesCount,
-        ratings: reactions.ratings};
+        return {
+            msg: "Comments Found",
+            comments: data.rows,
+            commentsCount: reactions.commentCount,
+            likesCount: reactions.likesCount,
+            ratings: reactions.ratings,
+            // likeStatus: null,
+            // myRatings: null
+        };
 
     } catch (e) {
         console.log(e)
@@ -45,7 +49,7 @@ async function getArrangedComments(userId, artId) {
     try {
         const myCommentData = await getMyComments(userId, artId);
         const remainingData = (await conn.query(`SELECT * FROM comments WHERE art_id='${artId}' AND comment_by!='${userId}' ORDER BY commented_on DESC;`)).rows;
-        
+
         for (let i = 0; i < remainingData.length; i++) {
             myCommentData.comments.push(remainingData[i]);
         }
@@ -56,7 +60,9 @@ async function getArrangedComments(userId, artId) {
             comments: myCommentData.comments,
             likesCount: ratingsData.likesCount,
             ratings: ratingsData.ratings,
-            commentsCount: ratingsData.commentCount
+            commentsCount: ratingsData.commentCount,
+            likeStatus: myCommentData.likeStatus,
+            myRatings: myCommentData.ratings
         };
 
     } catch (e) {

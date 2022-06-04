@@ -104,7 +104,6 @@ const getAllComments = async (req, res) => {
         } else {
             data = await commentService.getArrangedComments(validUser.id, req.body.artId);
         }
-        console.log(data.error);
         if ('error' in data) {
             return res.status(406).json({ error: data.error.toString() });
         }
@@ -112,8 +111,10 @@ const getAllComments = async (req, res) => {
             msg: data.msg,
             comments: data.comments,
             commentsCount: data.commentsCount,
-        likesCount: data.likesCount,
-        ratings: data.ratings
+            likesCount: data.likesCount,
+            ratings: data.ratings,
+            likeStatus: data.likeStatus,
+            myRatings: data.myRatings
         });
 
     } catch (error) {
