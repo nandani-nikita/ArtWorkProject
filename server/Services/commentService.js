@@ -1,11 +1,16 @@
 const { conn } = require('../DBs/db');
-const { use } = require('../Routers/commentRoutes');
 
 async function getAllComments(artId) {
     try {
 
         const data = await conn.query(`SELECT * FROM comments WHERE art_id='${artId}' ORDER BY commented_on DESC;`);
-        return { msg: "Comments Found", data: data.rows };
+
+        const reactions = await getTotalReactionCount(artId);
+        return { msg: "Comments Found",
+        comments: data.rows,
+        commentsCount: reactions.commentCount,
+        likesCount: reactions.likesCount,
+        ratings: reactions.ratings};
 
     } catch (e) {
         console.log(e)
@@ -21,7 +26,7 @@ async function getMyComments(userId, artId) {
         }
         const ratingsData = (await conn.query(`SELECT * FROM likes_ratings WHERE art_id='${artId}' AND user_id='${userId}';`)).rows[0];
         console.log(ratingsData);
-        
+
 
         return {
             msg: "Comments Found",
@@ -36,7 +41,29 @@ async function getMyComments(userId, artId) {
     }
 }
 
+async function getArrangedComments(userId, artId) {
+    try {
+        const myCommentData = await getMyComments(userId, artId);
+        const remainingData = (await conn.query(`SELECT * FROM comments WHERE art_id='${artId}' AND comment_by!='${userId}' ORDER BY commented_on DESC;`)).rows;
+        
+        for (let i = 0; i < remainingData.length; i++) {
+            myCommentData.comments.push(remainingData[i]);
+        }
 
+        const ratingsData = (await getTotalReactionCount(artId));
+        return {
+            msg: "Comments Found",
+            comments: myCommentData.comments,
+            likesCount: ratingsData.likesCount,
+            ratings: ratingsData.ratings,
+            commentsCount: ratingsData.commentCount
+        };
+
+    } catch (e) {
+        console.log(e)
+        return { error: e }
+    }
+}
 async function getTotalReactionCount(artId) {
     try {
 
@@ -53,7 +80,13 @@ async function getTotalReactionCount(artId) {
         }
         const ratings = ratingsArr.reduce((a, b) => a + b, 0) / ratingsArr.length;
         const comments = await conn.query(`SELECT * FROM comments WHERE art_id='${artId}'  ORDER BY commented_on DESC;`);
-        return { msg: "Data Calculated", artId: artId, likes: likesCount, ratings: ratings, comment: comments.rowCount };
+        return {
+            msg: "Data Calculated",
+            artId: artId,
+            likesCount: likesCount,
+            ratings: ratings,
+            commentCount: comments.rowCount
+        };
 
     } catch (e) {
         console.log(e)
@@ -138,7 +171,5 @@ module.exports = {
     handleRatings,
     handleComment,
     getAllComments,
-    getMyComments,
-    getTotalReactionCount,
-    
+    getArrangedComments
 }

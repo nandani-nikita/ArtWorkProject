@@ -93,54 +93,27 @@ const comment = async (req, res) => {
 
 const getAllComments = async (req, res) => {
     try {
-        // const validUser = await verifyToken(req.headers['authorization']);
-        // if (!(validUser || validUser.id)) {
-        //     return res.status(406).json({ error: "Unauthorized User" });
-        // }
         const checkValidArtWorkId = utility.isValidUuid(req.body.artId);
         if (!checkValidArtWorkId) {
             return res.status(406).json({ error: "Invalid Art Id" });
         }
-
-        const data = await commentService.getAllComments(req.body.artId);
+        var data;
+        const validUser = await verifyToken(req.headers['authorization']);
+        if (!(validUser || validUser.id)) {
+            data = await commentService.getAllComments(req.body.artId);
+        } else {
+            data = await commentService.getArrangedComments(validUser.id, req.body.artId);
+        }
         console.log(data.error);
         if ('error' in data) {
             return res.status(406).json({ error: data.error.toString() });
         }
         return res.status(200).json({
             msg: data.msg,
-            comments: data.data
-        });
-
-    } catch (error) {
-        console.log("Error: ", error);
-        return res.status(406).json({ error: error });
-    }
-};
-
-const getMyComments = async (req, res) => {
-    try {
-        const validUser = await verifyToken(req.headers['authorization']);
-        if (!(validUser || validUser.id)) {
-            return res.status(406).json({ error: "Unauthorized User" });
-        }
-        const checkValidArtWorkId = utility.isValidUuid(req.body.artId);
-        if (!checkValidArtWorkId) {
-            return res.status(406).json({ error: "Invalid Art Id" });
-        }
-
-        const data = await commentService.getMyComments(validUser.id, req.body.artId);
-
-        if ('error' in data) {
-            return res.status(406).json({ error: data.error.toString() });
-        }
-
-        console.log(data);
-        return res.status(200).json({
-            msg: data.msg,
             comments: data.comments,
-            likeStatus: data.likeStatus,
-            ratings: data.ratings
+            commentsCount: data.commentsCount,
+        likesCount: data.likesCount,
+        ratings: data.ratings
         });
 
     } catch (error) {
@@ -149,35 +122,6 @@ const getMyComments = async (req, res) => {
     }
 };
 
-const getAllReactionCount = async (req, res) => {
-    try {
-        // const validUser = await verifyToken(req.headers['authorization']);
-        // if (!(validUser || validUser.id)) {
-        //     return res.status(406).json({ error: "Unauthorized User" });
-        // }
-        const checkValidArtWorkId = utility.isValidUuid(req.body.artId);
-        if (!checkValidArtWorkId) {
-            return res.status(406).json({ error: "Invalid Art Id" });
-        }
-
-        const data = await commentService.getTotalReactionCount(req.body.artId);
-
-        if ('error' in data) {
-            return res.status(406).json({ error: data.error.toString() });
-        }
-        return res.status(200).json({
-            msg: data.msg,
-            artId: data.artId,
-            likes: data.likes,
-            ratings: data.ratings,
-            comment: data.comment
-        });
-
-    } catch (error) {
-        console.log("Error: ", error);
-        return res.status(406).json({ error: error });
-    }
-};
 
 
 module.exports = {
@@ -185,6 +129,4 @@ module.exports = {
     rate,
     comment,
     getAllComments,
-    getMyComments,
-    getAllReactionCount,
 }
