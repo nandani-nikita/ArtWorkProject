@@ -30,7 +30,7 @@ const signIn = async (req, res) => {
         let validUser = await userService.signInService(req.body);
 
         if ('error' in validUser) {
-            return res.status(406).json({ error: validUser.error })
+            return res.status(406).json({ error: validUser.error.toString() })
         }
 
         res.status(200).json({
@@ -89,13 +89,13 @@ const registerUser = async (req, res) => {
         if (req.files) {
             const checkValidFile = utility.isValidFile(req.files.profilePicture);
             if ('error' in checkValidFile) {
-                return res.status(406).json({ error: checkValidFile.error });
+                return res.status(406).json({ error: checkValidFile.error.toString() });
             }
         }
         let user = await userService.registerUserService(req.body, req.files);
 
         if ('error' in user) {
-            return res.status(406).json({ error: user.error })
+            return res.status(406).json({ error: user.error.toString() })
         }
 
         res.status(200).json({

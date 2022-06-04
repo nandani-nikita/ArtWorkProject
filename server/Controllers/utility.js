@@ -55,7 +55,14 @@ const isValidUuid = function (uuid) {
 
     return regexp.test(uuid);
 }
+const isValidRates = function (rating) {
+    console.log("wdfcwd",typeof(rating));
+    if(Number.isInteger(rating) && rating>0 && rating<=5) {
+        return true;
+    }
 
+    return false;
+}
 module.exports = {
     isValidEmail,
     isValidPassword,
@@ -63,5 +70,6 @@ module.exports = {
     isValidDate,
     isValidFile,
     isValidTextContent,
-    isValidUuid
+    isValidUuid,
+    isValidRates
 }

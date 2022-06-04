@@ -23,7 +23,7 @@ const commentRouter = require('./Routers/commentRoutes');
 app.use('/', routers);
 app.use('/user', userRouter);
 app.use('/art', artWorkRouter);
-app.use('/comment', commentRouter);
+app.use('/react', commentRouter);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

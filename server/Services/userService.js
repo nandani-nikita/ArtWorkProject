@@ -1,7 +1,7 @@
 const { conn } = require('../DBs/db');
 const { hashPassword, comparePassword } = require('../Controllers/hashed');
 
-const { generateToken, verifyToken } = require('../Controllers/jwt');
+const { generateToken } = require('../Controllers/jwt');
 
 const { v4: uuidv4 } = require('uuid');
 const AWS = require('aws-sdk');

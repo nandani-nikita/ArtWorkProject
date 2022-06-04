@@ -1,9 +1,7 @@
-const { conn } = require('../DBs/db');
-const { hashPassword, comparePassword } = require('../Controllers/hashed');
-const { generateToken, verifyToken } = require('../Controllers/jwt');
+const { verifyToken } = require('../Controllers/jwt');
 const utility = require('./utility');
 
-const artWorkService = require('../Services/artWorkService');
+const commentService = require('../Services/commentService');
 
 const like = async (req, res) => {
     try {
@@ -11,33 +9,18 @@ const like = async (req, res) => {
         if (!(validUser || validUser.id)) {
             return res.status(406).json({ error: "Unauthorized User" });
         }
-
-        if (!req.files) {
-            return res.status(406).send({
-                error: 'No file uploaded'
-            });
+        const checkValidArtWorkId = utility.isValidUuid(req.body.artId);
+        if (!checkValidArtWorkId) {
+            return res.status(406).json({ error: "Invalid Art Id" });
         }
 
-        const checkValidCaption = utility.isValidTextContent(req.files.caption);
-        if (!checkValidCaption) {
-            return res.status(406).json({ error: "Invalid Caption String" });
-        }
-        const checkValidDescription = utility.isValidTextContent(req.files.caption);
-        if (!checkValidDescription) {
-            return res.status(406).json({ error: "Invalid Description String" });
-        }
-        const checkValidFile = utility.isValidFile(req.files.artWork);
-        if ('error' in checkValidFile) {
-            return res.status(406).json({ error: checkValidFile.error });
-        }
-
-        const uploadArtWork = await artWorkService.uploadArtWorkService(validUser, req.body, req.files);
-        if ('error' in uploadArtWork) {
-            return res.status(406).json({ error: uploadArtWork.error });
+        const handleLike = await commentService.handleLike(validUser, req.body);
+        if ('error' in handleLike) {
+            return res.status(406).json({ error: handleLike.error.toString() });
         }
         return res.status(200).json({
-            msg: uploadArtWork.msg,
-            data: uploadArtWork.data
+            msg: handleLike.msg,
+            status: handleLike.status
         });
 
     } catch (error) {
@@ -55,14 +38,19 @@ const rate = async (req, res) => {
         if (!checkValidArtWorkId) {
             return res.status(406).json({ error: "Invalid Art Id" });
         }
-        const deleteArtWork = await artWorkService.deleteArtWorkService(validUser, req.body);
-        console.log('!!!!!!!!!!', deleteArtWork);
-        if ('error' in deleteArtWork) {
-            return res.status(406).json({ error: deleteArtWork.error });
+
+        const checkValidRates = utility.isValidRates(req.body.rating);
+        if (!checkValidRates) {
+            return res.status(406).json({ error: "Ratings must be between 1-5 and of integer type" });
+        }
+        const handleRatings = await commentService.handleRatings(validUser, req.body);
+        console.log(handleRatings.error);
+        if ('error' in handleRatings) {
+            return res.status(406).json({ error: handleRatings.error.toString() });
         }
         return res.status(200).json({
-            msg: deleteArtWork.msg,
-            data: deleteArtWork.data
+            msg: handleRatings.msg,
+            status: handleRatings.status
         });
 
     } catch (error) {
@@ -74,23 +62,27 @@ const rate = async (req, res) => {
 
 const comment = async (req, res) => {
     try {
-        res.status(200).json({ msg: "App started" });
+        const validUser = await verifyToken(req.headers['authorization']);
+        if (!(validUser || validUser.id)) {
+            return res.status(406).json({ error: "Unauthorized User" });
+        }
+        const checkValidArtWorkId = utility.isValidUuid(req.body.artId);
+        if (!checkValidArtWorkId) {
+            return res.status(406).json({ error: "Invalid Art Id" });
+        }
 
-    } catch (error) {
-        console.log("Error: ", error);
-        res.status(406).json({ error: error });
-    }
-};
-const deleteComment = async (req, res) => {
-    try {
-
-        const getArtWorks = await artWorkService.getAllArtWorkService();
-        if ('error' in getArtWorks) {
-            return res.status(406).json({ error: getArtWorks.error });
+        const checkValidCommentText = utility.isValidTextContent(req.body.comment);
+        if (!checkValidCommentText) {
+            return res.status(406).json({ error: "Invalid Comment String. Allowed Characters: a-zA-Z0-9 _@.!#&()" });
+        }
+        const handleComment = await commentService.handleComment(validUser, req.body);
+        console.log(handleComment.error);
+        if ('error' in handleComment) {
+            return res.status(406).json({ error: handleComment.error.toString() });
         }
         return res.status(200).json({
-            msg: getArtWorks.msg,
-            data: getArtWorks.data
+            msg: handleComment.msg,
+            status: handleComment.status
         });
 
     } catch (error) {
@@ -98,9 +90,101 @@ const deleteComment = async (req, res) => {
         return res.status(406).json({ error: error });
     }
 };
+
+const getAllComments = async (req, res) => {
+    try {
+        // const validUser = await verifyToken(req.headers['authorization']);
+        // if (!(validUser || validUser.id)) {
+        //     return res.status(406).json({ error: "Unauthorized User" });
+        // }
+        const checkValidArtWorkId = utility.isValidUuid(req.body.artId);
+        if (!checkValidArtWorkId) {
+            return res.status(406).json({ error: "Invalid Art Id" });
+        }
+
+        const data = await commentService.getAllComments(req.body.artId);
+        console.log(data.error);
+        if ('error' in data) {
+            return res.status(406).json({ error: data.error.toString() });
+        }
+        return res.status(200).json({
+            msg: data.msg,
+            data: data.data
+        });
+
+    } catch (error) {
+        console.log("Error: ", error);
+        return res.status(406).json({ error: error });
+    }
+};
+
+const getMyComments = async (req, res) => {
+    try {
+        const validUser = await verifyToken(req.headers['authorization']);
+        if (!(validUser || validUser.id)) {
+            return res.status(406).json({ error: "Unauthorized User" });
+        }
+        const checkValidArtWorkId = utility.isValidUuid(req.body.artId);
+        if (!checkValidArtWorkId) {
+            return res.status(406).json({ error: "Invalid Art Id" });
+        }
+
+        const data = await commentService.getMyComments(validUser.id, req.body.artId);
+
+        if ('error' in data) {
+            return res.status(406).json({ error: data.error.toString() });
+        }
+
+        console.log(data);
+        return res.status(200).json({
+            msg: data.msg,
+            comments: data.comments,
+            likeStatus: data.likeStatus,
+            ratings: data.ratings
+        });
+
+    } catch (error) {
+        console.log("Error: ", error);
+        return res.status(406).json({ error: error });
+    }
+};
+
+const getAllReactionCount = async (req, res) => {
+    try {
+        // const validUser = await verifyToken(req.headers['authorization']);
+        // if (!(validUser || validUser.id)) {
+        //     return res.status(406).json({ error: "Unauthorized User" });
+        // }
+        const checkValidArtWorkId = utility.isValidUuid(req.body.artId);
+        if (!checkValidArtWorkId) {
+            return res.status(406).json({ error: "Invalid Art Id" });
+        }
+
+        const data = await commentService.getTotalReactionCount(req.body.artId);
+
+        if ('error' in data) {
+            return res.status(406).json({ error: data.error.toString() });
+        }
+        return res.status(200).json({
+            msg: data.msg,
+            artId: data.artId,
+            likes: data.likes,
+            ratings: data.ratings,
+            comment: data.comment
+        });
+
+    } catch (error) {
+        console.log("Error: ", error);
+        return res.status(406).json({ error: error });
+    }
+};
+
+
 module.exports = {
     like,
     rate,
     comment,
-    deleteComment
+    getAllComments,
+    getMyComments,
+    getAllReactionCount,
 }

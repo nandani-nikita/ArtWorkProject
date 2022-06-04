@@ -11,29 +11,28 @@ const uploadNew = async (req, res) => {
         if (!(validUser || validUser.id)) {
             return res.status(406).json({ error: "Unauthorized User" });
         }
-
         if (!req.files) {
             return res.status(406).send({
-                error: 'No file uploaded'
+                error: 'No file to upload'
             });
         }
 
         const checkValidCaption = utility.isValidTextContent(req.files.caption);
         if (!checkValidCaption) {
-            return res.status(406).json({ error: "Invalid Caption String" });
+            return res.status(406).json({ error: "Invalid Caption String. Allowed Characters: a-zA-Z0-9 _@.!#&()" });
         }
         const checkValidDescription = utility.isValidTextContent(req.files.caption);
         if (!checkValidDescription) {
-            return res.status(406).json({ error: "Invalid Description String" });
+            return res.status(406).json({ error: "Invalid Description String. Allowed Characters: a-zA-Z0-9 _@.!#&()" });
         }
         const checkValidFile = utility.isValidFile(req.files.artWork);
         if ('error' in checkValidFile) {
-            return res.status(406).json({ error: checkValidFile.error });
+            return res.status(406).json({ error: checkValidFile.error.toString() });
         }
 
         const uploadArtWork = await artWorkService.uploadArtWorkService(validUser, req.body, req.files);
         if ('error' in uploadArtWork) {
-            return res.status(406).json({ error: uploadArtWork.error });
+            return res.status(406).json({ error: uploadArtWork.error.toString() });
         }
         return res.status(200).json({
             msg: uploadArtWork.msg,
@@ -56,9 +55,8 @@ const deleteMyArtWork = async (req, res) => {
             return res.status(406).json({ error: "Invalid Art Id" });
         }
         const deleteArtWork = await artWorkService.deleteArtWorkService(validUser, req.body);
-        console.log('!!!!!!!!!!', deleteArtWork);
         if ('error' in deleteArtWork) {
-            return res.status(406).json({ error: deleteArtWork.error });
+            return res.status(406).json({ error: deleteArtWork.error.toString() });
         }
         return res.status(200).json({
             msg: deleteArtWork.msg,
@@ -77,7 +75,7 @@ const getAllArtWorks = async (req, res) => {
 
         const getArtWorks = await artWorkService.getAllArtWorkService();
         if ('error' in getArtWorks) {
-            return res.status(406).json({ error: getArtWorks.error });
+            return res.status(406).json({ error: getArtWorks.error.toString() });
         }
         return res.status(200).json({
             msg: getArtWorks.msg,
@@ -107,7 +105,7 @@ const getMyArtWorks = async (req, res) => {
 
         const getArtWorks = await artWorkService.getMyArtWorkService(validUser);
         if ('error' in getArtWorks) {
-            return res.status(406).json({ error: getArtWorks.error });
+            return res.status(406).json({ error: getArtWorks.error.toString() });
         }
         return res.status(200).json({
             msg: getArtWorks.msg,

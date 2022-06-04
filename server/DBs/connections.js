@@ -1,4 +1,4 @@
-const {hashPassword} = require('../Controllers/hashed');
+const { hashPassword } = require('../Controllers/hashed');
 const { conn } = require('./db');
 
 conn.connect(function (err) {
@@ -79,8 +79,6 @@ conn.connect(function (err) {
 // 	    id uuid DEFAULT uuid_generate_v4(),
 // 	    art_id uuid NOT NULL,
 // 	    comment TEXT,
-//       is_liked BOOLEAN,
-//       ratings INTEGER DEFAULT 0 CHECK (ratings>= 0),
 //       comment_by uuid NOT NULL,
 //       commented_on TEXT NOT NULL,
 // 	    PRIMARY KEY (id),
@@ -96,6 +94,26 @@ conn.connect(function (err) {
 
 // const checkCommentsExists = `SELECT * FROM comments`;
 
+// const createlikesAndRatingsTable = `
+//     CREATE TABLE IF NOT EXISTS likes_ratings (
+// 	    id uuid DEFAULT uuid_generate_v4(),
+// 	    art_id uuid NOT NULL,
+//       user_id uuid NOT NULL,
+//       like_status BOOLEAN,
+//       ratings INTEGER DEFAULT 0 CHECK (ratings>= 0),
+//       date TEXT NOT NULL,
+// 	    PRIMARY KEY (id),
+//       CONSTRAINT fk_art_id
+//       FOREIGN KEY(art_id) 
+//       REFERENCES arts(id)
+//       ON DELETE CASCADE,
+//       CONSTRAINT fk_user_id
+//       FOREIGN KEY(user_id) 
+//       REFERENCES users(id)
+//       ON DELETE CASCADE
+//       );`;
+
+// const checkLikesRatingsExists = `SELECT * FROM likes_ratings`;
 
 // findFunction(checkUsersExists).then(data => {
 //   console.log(data);
@@ -130,6 +148,19 @@ conn.connect(function (err) {
 //   } else {
 //     console.log('Creating Table...comments');
 //     createFunction(createCommentsTable);
+//   }
+// }).catch(reject => {
+//   console.log('Rejected');
+//   console.log(reject);
+// });
+
+// findFunction(checkLikesRatingsExists).then(data => {
+//   console.log(data);
+//   if (data !== null) {
+//     console.log('Likes_Ratings Table exists');
+//   } else {
+//     console.log('Creating Table...likes_ratings');
+//     createFunction(createlikesAndRatingsTable);
 //   }
 // }).catch(reject => {
 //   console.log('Rejected');
@@ -173,7 +204,7 @@ conn.connect(function (err) {
 //         }
 //       });
 //     }
-//   } 
+//   }
 // }).catch(reject => {
 //   console.log('Rejected');
 //   console.log(reject);

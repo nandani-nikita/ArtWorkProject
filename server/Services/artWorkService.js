@@ -1,8 +1,7 @@
 const { conn } = require('../DBs/db');
 const dotenv = require("dotenv");
 dotenv.config({ path: './.env' });
-const { hashPassword, comparePassword } = require('../Controllers/hashed');
-const { generateToken, verifyToken } = require('../Controllers/jwt');
+
 const { v4: uuidv4 } = require('uuid');
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3({
