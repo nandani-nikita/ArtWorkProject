@@ -4,7 +4,7 @@ const { use } = require('../Routers/commentRoutes');
 async function getAllComments(artId) {
     try {
 
-        const data = await conn.query(`SELECT * FROM comments WHERE art_id='${artId}';`);
+        const data = await conn.query(`SELECT * FROM comments WHERE art_id='${artId}' ORDER BY commented_on DESC;`);
         return { msg: "Comments Found", data: data.rows };
 
     } catch (e) {
@@ -14,10 +14,10 @@ async function getAllComments(artId) {
 }
 async function getMyComments(userId, artId) {
     try {
-        const data = (await conn.query(`SELECT * FROM comments WHERE art_id='${artId}' AND comment_by='${userId}';`)).rows;
+        const data = (await conn.query(`SELECT * FROM comments WHERE art_id='${artId}' AND comment_by='${userId}' ORDER BY commented_on DESC;`)).rows;
         var comments = [];
         for (let i = 0; i < data.length; i++) {
-            comments.push(data[i].comment);
+            comments.push(data[i]);
         }
         const ratingsData = (await conn.query(`SELECT * FROM likes_ratings WHERE art_id='${artId}' AND user_id='${userId}';`)).rows[0];
         console.log(ratingsData);
@@ -52,7 +52,7 @@ async function getTotalReactionCount(artId) {
             }
         }
         const ratings = ratingsArr.reduce((a, b) => a + b, 0) / ratingsArr.length;
-        const comments = await conn.query(`SELECT * FROM comments WHERE art_id='${artId}';`);
+        const comments = await conn.query(`SELECT * FROM comments WHERE art_id='${artId}'  ORDER BY commented_on DESC;`);
         return { msg: "Data Calculated", artId: artId, likes: likesCount, ratings: ratings, comment: comments.rowCount };
 
     } catch (e) {

@@ -109,7 +109,7 @@ const getAllComments = async (req, res) => {
         }
         return res.status(200).json({
             msg: data.msg,
-            data: data.data
+            comments: data.data
         });
 
     } catch (error) {
