@@ -66,15 +66,16 @@ async function registerUserService(body, files) {
             }
             const signUpMedium = ((body.signUpMedium && (body.signUpMedium).toLowerCase() === 'google') ? 'google' : 'inapp')
 
-            const insertUserColumns = `id, name, email, password, phone, dob, profile_picture, signup_medium`;
+            const insertUserColumns = `id, name, email, password, phone, gender, dob, profile_picture, signup_medium`;
 
-            const insertUserValues = `'${id}','${body.name}','${body.email}','${await hashPassword(body.password)}','${body.mobile}','${body.dob}','${fileLocation}','${signUpMedium}'`;
+            const insertUserValues = `'${id}','${body.name}','${body.email}','${await hashPassword(body.password)}','${body.mobile}','${body.gender}','${body.dob}','${fileLocation}','${signUpMedium}'`;
 
             await conn.query(`INSERT INTO users (${insertUserColumns}) VALUES (${insertUserValues})`);
 
             return {
                 msg: 'User Registered',
                 name: body.name,
+                gender:body.gender,
                 dob: body.dob,
                 email: body.email,
                 mobile: body.mobile,

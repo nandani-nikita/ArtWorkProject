@@ -72,6 +72,12 @@ const registerUser = async (req, res) => {
                 error: "Password length is minimum 8 characters and maximum 12 characters. Passowrd must contain at least one uppercase letter, one lowercase letter, one number and one special character; special characters allowed: !@#$%^&*"
             });
         }
+        let checkValidGender = utility.isValidGender(req.body.gender);
+        if (!checkValidGender) {
+            return res.status(406).json({
+                error: "Invalid Gender Type. Allowed Types: Male, Female, Others"
+            });
+        }
         let checkValidPhone = utility.isValidPhone(req.body.mobile);
         if (!checkValidPhone) {
             return res.status(406).json({
@@ -103,6 +109,7 @@ const registerUser = async (req, res) => {
             name: user.name,
             email: user.email,
             mobile: user.mobile,
+            gender:body.gender,
             dob: user.dob,
             profilePicture: user.profilePicture
         });

@@ -12,7 +12,13 @@ const isValidPhone = function (phone) {
     const regexp = /^\d{10}$/;
     return regexp.test(phone);
 }
-
+const isValidGender = function (gender) {
+    const allowedGenders = ['male', 'female', 'others'];
+    if(allowedGenders.includes(gender.toLowerCase())) {
+        return true;
+    }
+    return false;
+}
 const isValidDate = function (date) {
     const newDate = new Date(date)
     if (newDate.toDateString() === 'Invalid Date') {
@@ -67,6 +73,7 @@ module.exports = {
     isValidEmail,
     isValidPassword,
     isValidPhone,
+    isValidGender,
     isValidDate,
     isValidFile,
     isValidTextContent,
