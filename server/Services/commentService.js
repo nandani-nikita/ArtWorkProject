@@ -12,8 +12,8 @@ async function getAllComments(artId) {
             commentsCount: reactions.commentCount,
             likesCount: reactions.likesCount,
             ratings: reactions.ratings,
-            // likeStatus: null,
-            // myRatings: null
+            likeStatus: null,
+            myRatings: null
         };
 
     } catch (e) {
