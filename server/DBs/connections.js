@@ -12,21 +12,19 @@ conn.connect(function (err) {
 
 const createFunction = async (createTableQuery) => {
   try {
-    console.log('creating table');
+    // console.log('creating table');
     await conn.query(createTableQuery);
-    console.log('Table Created');
-    // return 'Table Created'
+    // console.log('Table Created');
 
   } catch (e) {
     console.log('error: ', e);
-    // return null;
   }
 
 }
 const findFunction = async (findQuery) => {
   try {
     var data = await conn.query(findQuery);
-    console.log('Table exists', data.rows);
+    // console.log('Table exists', data.rows);
     // console.log('finding', data.rows);
     return data.rows;
   } catch (e) {
@@ -36,7 +34,6 @@ const findFunction = async (findQuery) => {
   }
 
 }
-
 
 const createUserTable = `
     CREATE TABLE IF NOT EXISTS users (
@@ -117,11 +114,11 @@ const createlikesAndRatingsTable = `
 const checkLikesRatingsExists = `SELECT * FROM likes_ratings`;
 
 findFunction(checkUsersExists).then(data => {
-  console.log(data);
+  // console.log(data);
   if (data !== null) {
-    console.log('users Table exists');
+    // console.log('users Table exists');
   } else {
-    console.log('Creating Table...users');
+    // console.log('Creating Table...users');
     createFunction(createUserTable);
   }
 }).catch(reject => {
@@ -130,11 +127,11 @@ findFunction(checkUsersExists).then(data => {
 })
 
 findFunction(checkArtsExists).then(data => {
-  console.log(data);
+  // console.log(data);
   if (data !== null) {
-    console.log('Arts Table exists');
+    // console.log('Arts Table exists');
   } else {
-    console.log('Creating Table...arts');
+    // console.log('Creating Table...arts');
     createFunction(createArtsTable);
   }
 }).catch(reject => {
@@ -143,11 +140,11 @@ findFunction(checkArtsExists).then(data => {
 });
 
 findFunction(checkCommentsExists).then(data => {
-  console.log(data);
+  // console.log(data);
   if (data !== null) {
-    console.log('Comments Table exists');
+    // console.log('Comments Table exists');
   } else {
-    console.log('Creating Table...comments');
+    // console.log('Creating Table...comments');
     createFunction(createCommentsTable);
   }
 }).catch(reject => {
@@ -156,11 +153,11 @@ findFunction(checkCommentsExists).then(data => {
 });
 
 findFunction(checkLikesRatingsExists).then(data => {
-  console.log(data);
+  // console.log(data);
   if (data !== null) {
-    console.log('Likes_Ratings Table exists');
+    // console.log('Likes_Ratings Table exists');
   } else {
-    console.log('Creating Table...likes_ratings');
+    // console.log('Creating Table...likes_ratings');
     createFunction(createlikesAndRatingsTable);
   }
 }).catch(reject => {
@@ -173,12 +170,12 @@ const insertFunction = async () => {
 
   try {
     const password = (await hashPassword("Nicks@10"));
-    console.log(password);
+    // console.log(password);
     const insertSuperUser = `insert into users (name, email, gender, dob, phone, password) values ('Nikita Nandani', 'nikita@bdec.in','female', '1996-01-25', '6202878654', '${password}' );`
 
           await conn.query(insertSuperUser, (err) => {
               if (!err) {
-                console.log('data added');
+                // console.log('data added');
                 return 'Inserted'
               } else {
                   console.log('error occured: ', err);
@@ -192,13 +189,13 @@ const insertFunction = async () => {
 
 }
 findFunction(checkUsersExists).then(data => {
-  console.log(data);
+  // console.log(data);
   if (data !== null) {
-    console.log('users Table exists, data: ', data);
+    // console.log('users Table exists, data: ', data);
     if(data.length === 0) {
       insertFunction().then((result,err)=>{
         if(result) {
-          console.log("result",result);
+          // console.log("result",result);
         }
         if(err) {
           console.log("err",err);
@@ -212,4 +209,4 @@ findFunction(checkUsersExists).then(data => {
 })
 
 
-insertFunction()
+// insertFunction()

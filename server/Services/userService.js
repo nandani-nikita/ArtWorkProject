@@ -68,7 +68,7 @@ async function registerUserService(body, files) {
 
             const insertUserColumns = `id, name, email, password, phone, gender, dob, profile_picture, signup_medium`;
 
-            const insertUserValues = `'${id}','${body.name}','${body.email}','${await hashPassword(body.password)}','${body.mobile}','${body.gender}','${body.dob}','${fileLocation}','${signUpMedium}'`;
+            const insertUserValues = `'${id}','${body.name}','${body.email}','${await hashPassword(body.password)}','${body.mobile}','${(body.gender).toLowerCase()}','${body.dob}','${fileLocation}','${signUpMedium}'`;
 
             await conn.query(`INSERT INTO users (${insertUserColumns}) VALUES (${insertUserValues})`);
 
