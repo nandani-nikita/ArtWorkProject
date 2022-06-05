@@ -48,9 +48,9 @@ const signIn = async (req, res) => {
 const registerUser = async (req, res) => {
     try {
         console.log('Register User Api');
-        if (!(req.body.name && req.body.email && req.body.password && req.body.mobile && req.body.dob)) {
+        if (!(req.body.name && req.body.email && req.body.password && req.body.mobile && req.body.dob && req.body.gender)) {
             return res.status(406).json({
-                error: "Invalid Input. Fields required: name, email, password, mobile, dob."
+                error: "Invalid Input. Fields required: name, email, password, mobile, gender, dob."
             });
         }
 
@@ -109,7 +109,7 @@ const registerUser = async (req, res) => {
             name: user.name,
             email: user.email,
             mobile: user.mobile,
-            gender:body.gender,
+            gender:user.gender,
             dob: user.dob,
             profilePicture: user.profilePicture
         });
