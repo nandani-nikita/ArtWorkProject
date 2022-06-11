@@ -23,8 +23,15 @@ async function uploadArtWorkService(user, body, files) {
 
         var s3upload = await s3.upload(params).promise();
         console.log(s3upload);
+
+        const dateString = new Date(Date.now());
+        const date = dateString.toLocaleDateString() + " " + dateString.toLocaleTimeString();
+        console.log(date);
+        const time = dateString.toTimeString();
+
         const insertColumns = `id, art_work, caption, description, uploaded_by, uploaded_on`;
-        const insertValues = `'${avatarId}', '${s3upload.Location}', '${body.caption}', '${body.description}', '${user.id}', '${new Date(Date.now())}'`
+
+        const insertValues = `'${avatarId}', '${s3upload.Location}', '${body.caption}', '${body.description}', '${user.id}', '${date}'`
 
         await conn.query(`INSERT INTO arts (${insertColumns}) VALUES (${insertValues})`);
 

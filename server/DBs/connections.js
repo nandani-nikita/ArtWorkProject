@@ -60,7 +60,7 @@ const createArtsTable = `
       caption TEXT NOT NULL,
       description TEXT,
 	    uploaded_by uuid NOT NULL,
-      uploaded_on TEXT NOT NULL,
+      uploaded_on TIMESTAMPTZ NOT NULL,
       likes_count INTEGER DEFAULT 0 CHECK (likes_count>= 0),
       comments_count INTEGER DEFAULT 0 CHECK (comments_count>= 0),
 	    average_ratings FLOAT(2) DEFAULT 0 CHECK (average_ratings>= 0),
