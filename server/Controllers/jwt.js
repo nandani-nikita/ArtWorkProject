@@ -41,15 +41,17 @@ try{
         const tokenVerify = jwt.verify(bearerToken, secret);
         // console.log(tokenVerify, "\ntoken verified");
         // return true;
+        // console.log('==========================================');
+        // console.log(tokenVerify);
         return tokenVerify;
     } else {
         console.log("No token");
         return false;
     }
 } catch(error) {
-    console.log("error", error);
+    console.log("JWT VERIFICATION ERROR \n", error);
     // return res.status(406).json({error:error})
-    return error;
+    return false;
 }
     
 

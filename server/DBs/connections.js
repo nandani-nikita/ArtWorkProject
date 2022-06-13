@@ -97,7 +97,7 @@ const createlikesAndRatingsTable = `
 	    id uuid DEFAULT uuid_generate_v4(),
 	    art_id uuid NOT NULL,
       user_id uuid NOT NULL,
-      like_status BOOLEAN,
+      like_status BOOLEAN DEFAULT FALSE,
       ratings INTEGER DEFAULT 0 CHECK (ratings>= 0),
       date TEXT NOT NULL,
 	    PRIMARY KEY (id),

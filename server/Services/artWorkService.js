@@ -59,7 +59,20 @@ async function getAllArtWorkService() {
         return { error: e.toString() }
     }
 }
+async function getArtWorkByIdService(id) {
+    try {
+        const artWork = await conn.query(`SELECT * FROM arts WHERE id='${id}'`);
 
+        return {
+            msg: 'Art Work Found',
+            data: artWork.rows[0]
+        };
+
+    } catch (e) {
+        console.log(`getAllArtWorkService catch error : ${e}`);
+        return { error: e.toString() }
+    }
+}
 async function getMyArtWorkService(user) {
     try {
         const artWorks = await conn.query(`SELECT * FROM arts WHERE uploaded_by='${user.id}' ORDER BY uploaded_on DESC`);
@@ -76,9 +89,9 @@ async function getMyArtWorkService(user) {
 }
 
 
-async function deleteArtWorkService(user, body) {
+async function deleteArtWorkService(user, artId) {
     try {
-        let artWorks = (await conn.query(`SELECT * FROM arts WHERE uploaded_by='${user.id}' AND id='${body.artId}'`)).rows[0];
+        let artWorks = (await conn.query(`SELECT * FROM arts WHERE uploaded_by='${user.id}' AND id='${artId}'`)).rows[0];
 
         if (!artWorks || artWorks.length === 0) {
             return {
@@ -93,12 +106,14 @@ async function deleteArtWorkService(user, body) {
         var s3delete = await s3.deleteObject(params).promise();
         console.log(s3delete);
 
-        await conn.query(`DELETE FROM arts WHERE uploaded_by='${user.id}' AND id='${body.artId}'`);
+        await conn.query(`DELETE FROM likes_ratings WHERE art_id='${artId}'`);
+        await conn.query(`DELETE FROM comments WHERE art_id='${artId}'`);
+        await conn.query(`DELETE FROM arts WHERE uploaded_by='${user.id}' AND id='${artId}'`);
     
         
         return {
             msg: 'Art Works Deleted',
-            data: body.artId
+            data: artId
         };
 
     } catch (e) {
@@ -109,6 +124,7 @@ async function deleteArtWorkService(user, body) {
 module.exports = {
     uploadArtWorkService,
     getAllArtWorkService,
+    getArtWorkByIdService,
     getMyArtWorkService,
     deleteArtWorkService
 }

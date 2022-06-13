@@ -35,8 +35,13 @@ const signIn = async (req, res) => {
 
         res.status(200).json({
             msg: "Login Successful",
+            id: validUser.id,
             name: validUser.name,
             email: validUser.email,
+            mobile: validUser.mobile,
+            gender: validUser.gender,
+            phone: validUser.phone,
+            profilePicture: validUser.profile_picture,
             token: validUser.token
         });
 
@@ -54,7 +59,9 @@ const registerUser = async (req, res) => {
             });
         }
 
+
         let checkValidName = utility.isValidTextContent(req.body.name);
+        console.log('hi');
         if (!checkValidName) {
             return res.status(406).json({
                 error: "Invalid Name String"
@@ -109,17 +116,49 @@ const registerUser = async (req, res) => {
             name: user.name,
             email: user.email,
             mobile: user.mobile,
-            gender:user.gender,
+            gender: user.gender,
             dob: user.dob,
             profilePicture: user.profilePicture
         });
 
     } catch (error) {
+        console.log(error);
+        res.status(406).json(error);
+    }
+};
+const getUser = async (req, res) => {
+    try {
+        console.log('Get User Api');
+
+        const checkValidUserId = utility.isValidUuid(req.params.userId);
+        if (!checkValidUserId) {
+            return res.status(406).json({ error: "Invalid User Id" });
+        }
+        let user = await userService.getUserDetailsService(req.params.userId);
+
+        if ('error' in user) {
+            return res.status(406).json({ error: user.error.toString() })
+        }
+
+        res.status(200).json({
+            msg: user.msg,
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            mobile: user.mobile,
+            gender: user.gender,
+            dob: user.dob,
+            profilePicture: user.profilePicture
+        });
+
+    } catch (error) {
+        console.log(error);
         res.status(406).json(error);
     }
 };
 
 module.exports = {
     signIn,
-    registerUser
+    registerUser,
+    getUser
 }

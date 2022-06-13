@@ -48,9 +48,9 @@ async function registerUserService(body, files) {
         if (checkExistingUser.rows.length === 0) {
             var fileLocation = null;
             const id = uuidv4();
-            if(files){
+            if (files) {
                 const avatar = files.profilePicture;
-                
+
                 const extenstion = avatar.name.split('.')[1];
                 const fileContent = Buffer.from(avatar.data, 'binary');
                 // const fileContent = fs.readFileSync(avatar)
@@ -59,7 +59,7 @@ async function registerUserService(body, files) {
                     Key: `profilePictures/${id}.${extenstion}`,
                     Body: fileContent
                 }
-    
+
                 var s3upload = await s3.upload(params).promise();
                 console.log(s3upload);
                 fileLocation = s3upload.Location;
@@ -75,14 +75,14 @@ async function registerUserService(body, files) {
             return {
                 msg: 'User Registered',
                 name: body.name,
-                gender:body.gender,
+                gender: body.gender,
                 dob: body.dob,
                 email: body.email,
                 mobile: body.mobile,
                 profilePicture: fileLocation
             };
         } else {
-            return {error: 'Email Taken'}
+            return { error: 'Email Taken' }
         }
 
 
@@ -92,8 +92,37 @@ async function registerUserService(body, files) {
     }
 }
 
+async function getUserDetailsService(userId) {
+    try {
+        // console.log(userId);
+        const checkExistingUser = (await conn.query(`SELECT * FROM users WHERE id='${userId}'`)).rows;
+        // console.log(checkExistingUser);
+        if (checkExistingUser.length) {
+            const user = checkExistingUser[0];
 
+
+            return {
+                msg: 'User Found',
+                id: user.id,
+                name: user.name,
+                gender: user.gender,
+                dob: user.dob,
+                email: user.email,
+                mobile: user.mobile,
+                profilePicture: user.profile_picture
+            };
+        } else {
+            return { error: 'User Not Found' }
+        }
+
+
+    } catch (e) {
+        console.log(`getUserDetailsService catch error : ${e}`);
+        return { error: e.toString() }
+    }
+}
 module.exports = {
     signInService,
-    registerUserService
+    registerUserService,
+    getUserDetailsService
 }

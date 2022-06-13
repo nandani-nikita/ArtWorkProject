@@ -62,7 +62,7 @@ const isValidUuid = function (uuid) {
     return regexp.test(uuid);
 }
 const isValidRates = function (rating) {
-    console.log("wdfcwd",typeof(rating));
+    console.log("wdfcwd",typeof(rating), Number.isInteger(rating));
     if(Number.isInteger(rating) && rating>0 && rating<=5) {
         return true;
     }

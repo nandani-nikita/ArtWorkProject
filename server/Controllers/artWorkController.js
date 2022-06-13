@@ -17,11 +17,11 @@ const uploadNew = async (req, res) => {
             });
         }
 
-        const checkValidCaption = utility.isValidTextContent(req.files.caption);
+        const checkValidCaption = utility.isValidTextContent(req.body.caption);
         if (!checkValidCaption) {
             return res.status(406).json({ error: "Invalid Caption String. Allowed Characters: a-zA-Z0-9 _@.!#&()" });
         }
-        const checkValidDescription = utility.isValidTextContent(req.files.caption);
+        const checkValidDescription = utility.isValidTextContent(req.body.description);
         if (!checkValidDescription) {
             return res.status(406).json({ error: "Invalid Description String. Allowed Characters: a-zA-Z0-9 _@.!#&()" });
         }
@@ -50,11 +50,11 @@ const deleteMyArtWork = async (req, res) => {
         if (!(validUser || validUser.id)) {
             return res.status(406).json({ error: "Unauthorized User" });
         }
-        const checkValidArtWorkId = utility.isValidUuid(req.body.artId);
+        const checkValidArtWorkId = utility.isValidUuid(req.params.artId);
         if (!checkValidArtWorkId) {
             return res.status(406).json({ error: "Invalid Art Id" });
         }
-        const deleteArtWork = await artWorkService.deleteArtWorkService(validUser, req.body);
+        const deleteArtWork = await artWorkService.deleteArtWorkService(validUser, req.params.artId);
         if ('error' in deleteArtWork) {
             return res.status(406).json({ error: deleteArtWork.error.toString() });
         }
@@ -117,20 +117,28 @@ const getMyArtWorks = async (req, res) => {
         return res.status(406).json({ error: error });
     }
 };
-const comment = async (req, res) => {
+const getArtWorkById = async (req, res) => {
     try {
-        res.status(200).json({ msg: "App started" });
+
+        const getArtWorks = await artWorkService.getArtWorkByIdService(req.params.id);
+        if ('error' in getArtWorks) {
+            return res.status(406).json({ error: getArtWorks.error.toString() });
+        }
+        return res.status(200).json({
+            msg: getArtWorks.msg,
+            data: getArtWorks.data
+        });
 
     } catch (error) {
         console.log("Error: ", error);
-        res.status(406).json({ error: error });
+        return res.status(406).json({ error: error });
     }
 };
 module.exports = {
     uploadNew,
     deleteMyArtWork,
-    comment,
     getAllArtWorks,
     getTrendingArtWorks,
-    getMyArtWorks
+    getMyArtWorks,
+    getArtWorkById
 }

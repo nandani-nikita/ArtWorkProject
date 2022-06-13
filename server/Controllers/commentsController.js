@@ -62,6 +62,7 @@ const rate = async (req, res) => {
 
 const comment = async (req, res) => {
     try {
+        
         const validUser = await verifyToken(req.headers['authorization']);
         if (!(validUser || validUser.id)) {
             return res.status(406).json({ error: "Unauthorized User" });
@@ -93,12 +94,15 @@ const comment = async (req, res) => {
 
 const getAllComments = async (req, res) => {
     try {
+        // console.log(req.body);
+        // console.log(req.headers)
         const checkValidArtWorkId = utility.isValidUuid(req.body.artId);
         if (!checkValidArtWorkId) {
             return res.status(406).json({ error: "Invalid Art Id" });
         }
         var data;
         const validUser = await verifyToken(req.headers['authorization']);
+        // console.log('\n\n\n\n, ',validUser);
         if (!(validUser || validUser.id)) {
             data = await commentService.getAllComments(req.body.artId);
         } else {
@@ -107,6 +111,7 @@ const getAllComments = async (req, res) => {
         if ('error' in data) {
             return res.status(406).json({ error: data.error.toString() });
         }
+        console.log(data);
         return res.status(200).json({
             msg: data.msg,
             comments: data.comments,

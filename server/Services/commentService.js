@@ -12,8 +12,8 @@ async function getAllComments(artId) {
             commentsCount: reactions.commentCount,
             likesCount: reactions.likesCount,
             ratings: reactions.ratings,
-            likeStatus: null,
-            myRatings: null
+            likeStatus: false,
+            myRatings: 0
         };
 
     } catch (e) {
@@ -35,8 +35,8 @@ async function getMyComments(userId, artId) {
         return {
             msg: "Comments Found",
             comments: comments,
-            likeStatus: ratingsData.like_status,
-            ratings: ratingsData.ratings
+            likeStatus:ratingsData? ratingsData.like_status:false,
+            ratings: ratingsData?ratingsData.ratings:0
         };
 
     } catch (e) {
@@ -57,12 +57,12 @@ async function getArrangedComments(userId, artId) {
         const ratingsData = (await getTotalReactionCount(artId));
         return {
             msg: "Comments Found",
-            comments: myCommentData.comments,
-            likesCount: ratingsData.likesCount,
-            ratings: ratingsData.ratings,
-            commentsCount: ratingsData.commentCount,
-            likeStatus: myCommentData.likeStatus,
-            myRatings: myCommentData.ratings
+            comments: myCommentData ? myCommentData.comments : null,
+            likesCount: ratingsData ? ratingsData.likesCount : 0,
+            ratings: ratingsData ? ratingsData.ratings : 0,
+            commentsCount: ratingsData ? ratingsData.commentCount : 0,
+            likeStatus: myCommentData ? myCommentData.likeStatus : false,
+            myRatings: myCommentData ? myCommentData.ratings : 0
         };
 
     } catch (e) {
@@ -90,7 +90,7 @@ async function getTotalReactionCount(artId) {
             msg: "Data Calculated",
             artId: artId,
             likesCount: likesCount,
-            ratings: ratings,
+            ratings: ratings ? ratings : 0,
             commentCount: comments.rowCount
         };
 
@@ -118,7 +118,7 @@ async function handleLike(user, body) {
 
             console.log(likeStatus);
             console.log('data exists, updating...');
-            const updateData = await conn.query(`UPDATE likes_ratings SET like_status=${likeStatus} WHERE art_id='${body.artId}';  `);
+            const updateData = await conn.query(`UPDATE likes_ratings SET like_status=${likeStatus} WHERE art_id='${body.artId}' AND user_id='${user.id}';  `);
             console.log(updateData);
         }
 
