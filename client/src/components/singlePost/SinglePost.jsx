@@ -15,26 +15,33 @@ export default function SinglePost() {
   const [desc, setDesc] = useState("");
   const [updateMode, setUpdateMode] = useState(false);
   const [author, setAuthor] = useState('');
- 
-  
+
+
 
   useEffect(() => {
 
     const getPost = async () => {
       // console.log(path, "pathhh");
-      const res = (await axios.get("http://localhost:8080/art/" + path)).data;
+      const auth = user ? `Bearer ${user.token}` : null;
+      const res = (await axios.get("http://localhost:8080/art/" + path,
+        {
+          headers: {
+            "authorization": auth
+          }
+        })).data;
       // console.log(res.data);
       // console.log(res.data.description);
       setPost(res.data);
       setTitle(res.data.caption);
       setDesc(res.data.description);
       // console.log(post.uploaded_by);
-      const getAuthor = await axios.get("http://localhost:8080/user/" + res.data.uploaded_by);
+      // console.log(res.data.authorInfo);
+      // const getAuthor = res.data.authorInfo.name;
       // console.log(getAuthor.data);
-      setAuthor(getAuthor.data.name);
+      setAuthor(res.data.authorInfo.name);
     };
     getPost();
-  }, [path, post]);
+  }, []);
 
   const handleDelete = async () => {
     try {
@@ -45,7 +52,7 @@ export default function SinglePost() {
       });
       alert('Deleted');
       window.location.replace("/");
-    } catch (err) { 
+    } catch (err) {
       alert(err.response ? err.response.data.error : 'Some Error Occurred. Please Try Again.');
     }
   };
@@ -118,7 +125,8 @@ export default function SinglePost() {
           </button>
         )}
       </div>
-      <AllComments post={post} />
+      {post.commentData &&
+      <AllComments comments={post.commentData.comments} /> }
       <Comment post={post} />
     </div>
   );

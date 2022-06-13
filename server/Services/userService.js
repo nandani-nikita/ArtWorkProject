@@ -108,7 +108,7 @@ async function getUserDetailsService(userId) {
                 gender: user.gender,
                 dob: user.dob,
                 email: user.email,
-                mobile: user.mobile,
+                mobile: user.phone,
                 profilePicture: user.profile_picture
             };
         } else {

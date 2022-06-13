@@ -2,6 +2,9 @@ const { conn } = require('../DBs/db');
 const dotenv = require("dotenv");
 dotenv.config({ path: './.env' });
 
+const commentService = require('./commentService');
+const userService = require('./userService');
+
 const { v4: uuidv4 } = require('uuid');
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3({
@@ -59,13 +62,18 @@ async function getAllArtWorkService() {
         return { error: e.toString() }
     }
 }
-async function getArtWorkByIdService(id) {
+async function getArtWorkByIdService(artId, userId = null) {
     try {
-        const artWork = await conn.query(`SELECT * FROM arts WHERE id='${id}'`);
-
+        const artWork = (await conn.query(`SELECT * FROM arts WHERE id='${artId}'`)).rows[0];
+        console.log(userId);
+        const commentData = await commentService.getArrangedComments(artId, userId);
+        Object.assign(artWork, { commentData: commentData });
+        const authorInfo = await userService.getUserDetailsService(artWork.uploaded_by);
+        Object.assign(artWork, { authorInfo: authorInfo });
+        // console.log(artWork);
         return {
             msg: 'Art Work Found',
-            data: artWork.rows[0]
+            data: artWork
         };
 
     } catch (e) {
@@ -109,8 +117,8 @@ async function deleteArtWorkService(user, artId) {
         await conn.query(`DELETE FROM likes_ratings WHERE art_id='${artId}'`);
         await conn.query(`DELETE FROM comments WHERE art_id='${artId}'`);
         await conn.query(`DELETE FROM arts WHERE uploaded_by='${user.id}' AND id='${artId}'`);
-    
-        
+
+
         return {
             msg: 'Art Works Deleted',
             data: artId

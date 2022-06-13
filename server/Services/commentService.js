@@ -1,26 +1,7 @@
 const { conn } = require('../DBs/db');
 
-async function getAllComments(artId) {
-    try {
+const userService = require('./userService');
 
-        const data = await conn.query(`SELECT * FROM comments WHERE art_id='${artId}' ORDER BY commented_on DESC;`);
-
-        const reactions = await getTotalReactionCount(artId);
-        return {
-            msg: "Comments Found",
-            comments: data.rows,
-            commentsCount: reactions.commentCount,
-            likesCount: reactions.likesCount,
-            ratings: reactions.ratings,
-            likeStatus: false,
-            myRatings: 0
-        };
-
-    } catch (e) {
-        console.log(e)
-        return { error: e }
-    }
-}
 async function getMyComments(userId, artId) {
     try {
         const data = (await conn.query(`SELECT * FROM comments WHERE art_id='${artId}' AND comment_by='${userId}' ORDER BY commented_on DESC;`)).rows;
@@ -35,8 +16,8 @@ async function getMyComments(userId, artId) {
         return {
             msg: "Comments Found",
             comments: comments,
-            likeStatus:ratingsData? ratingsData.like_status:false,
-            ratings: ratingsData?ratingsData.ratings:0
+            likeStatus: ratingsData ? ratingsData.like_status : false,
+            ratings: ratingsData ? ratingsData.ratings : 0
         };
 
     } catch (e) {
@@ -45,26 +26,70 @@ async function getMyComments(userId, artId) {
     }
 }
 
-async function getArrangedComments(userId, artId) {
+async function getArrangedComments(artId, userId = null) {
     try {
-        const myCommentData = await getMyComments(userId, artId);
-        const remainingData = (await conn.query(`SELECT * FROM comments WHERE art_id='${artId}' AND comment_by!='${userId}' ORDER BY commented_on DESC;`)).rows;
+        if (!userId) {
+            const data = await conn.query(`SELECT * FROM comments WHERE art_id='${artId}' ORDER BY commented_on DESC;`);
 
-        for (let i = 0; i < remainingData.length; i++) {
-            myCommentData.comments.push(remainingData[i]);
+            const reactions = await getTotalReactionCount(artId);
+            console.log("+++++++++++++++++++");
+            console.log('user id not given');
+            const commentData = await appendUserDetailsToComments(data.rows)
+            console.log(commentData);
+
+            console.log("+++++++++++++++++++");
+            return {
+                msg: "Comments Found",
+                comments: commentData,
+                commentsCount: reactions.commentCount,
+                likesCount: reactions.likesCount,
+                ratings: reactions.ratings,
+                likeStatus: false,
+                myRatings: 0
+            };
+        } else {
+
+            const myCommentData = await getMyComments(userId, artId);
+            const remainingData = (await conn.query(`SELECT * FROM comments WHERE art_id='${artId}' AND comment_by!='${userId}' ORDER BY commented_on DESC;`)).rows;
+
+            for (let i = 0; i < remainingData.length; i++) {
+                myCommentData.comments.push(remainingData[i]);
+            }
+
+            const ratingsData = (await getTotalReactionCount(artId));
+            console.log("+++++++++++++++++++");
+            console.log('user id given');
+            const commentData = await appendUserDetailsToComments(myCommentData.comments)
+            console.log(commentData);
+            console.log("+++++++++++++++++++");
+            return {
+                msg: "Comments Found",
+                comments: myCommentData ? commentData : null,
+                likesCount: ratingsData ? ratingsData.likesCount : 0,
+                ratings: ratingsData ? ratingsData.ratings : 0,
+                commentsCount: ratingsData ? ratingsData.commentCount : 0,
+                likeStatus: myCommentData ? myCommentData.likeStatus : false,
+                myRatings: myCommentData ? myCommentData.ratings : 0
+            };
+
+        }
+    } catch (e) {
+        console.log(e)
+        return { error: e }
+    }
+}
+async function appendUserDetailsToComments(commentArr) {
+    try {
+        if (commentArr) {
+            for (let i = 0; i < commentArr.length; i++) {
+
+                const userInfo = await userService.getUserDetailsService(commentArr[i].comment_by);
+                commentArr[i]['commentPersonName'] = userInfo.name;
+                // console.log(userInfo);
+            }
         }
 
-        const ratingsData = (await getTotalReactionCount(artId));
-        return {
-            msg: "Comments Found",
-            comments: myCommentData ? myCommentData.comments : null,
-            likesCount: ratingsData ? ratingsData.likesCount : 0,
-            ratings: ratingsData ? ratingsData.ratings : 0,
-            commentsCount: ratingsData ? ratingsData.commentCount : 0,
-            likeStatus: myCommentData ? myCommentData.likeStatus : false,
-            myRatings: myCommentData ? myCommentData.ratings : 0
-        };
-
+        return commentArr;
     } catch (e) {
         console.log(e)
         return { error: e }
@@ -176,6 +201,5 @@ module.exports = {
     handleLike,
     handleRatings,
     handleComment,
-    getAllComments,
     getArrangedComments
 }

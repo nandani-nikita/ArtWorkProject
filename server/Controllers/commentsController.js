@@ -103,11 +103,12 @@ const getAllComments = async (req, res) => {
         var data;
         const validUser = await verifyToken(req.headers['authorization']);
         // console.log('\n\n\n\n, ',validUser);
-        if (!(validUser || validUser.id)) {
-            data = await commentService.getAllComments(req.body.artId);
-        } else {
-            data = await commentService.getArrangedComments(validUser.id, req.body.artId);
-        }
+        // if (!(validUser || validUser.id)) {
+        //     // data = await commentService.getAllComments(req.body.artId);
+        //     data = await commentService.getArrangedComments(req.body.artId);
+        // } else {
+            data = await commentService.getArrangedComments(req.body.artId, validUser.id );
+        // }
         if ('error' in data) {
             return res.status(406).json({ error: data.error.toString() });
         }

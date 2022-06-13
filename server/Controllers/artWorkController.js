@@ -119,8 +119,11 @@ const getMyArtWorks = async (req, res) => {
 };
 const getArtWorkById = async (req, res) => {
     try {
-
-        const getArtWorks = await artWorkService.getArtWorkByIdService(req.params.id);
+        const validUser = await verifyToken(req.headers['authorization']);
+        // if (!(validUser || validUser.id)) {
+        //     return res.status(406).json({ error: "Unauthorized User" });
+        // }
+        const getArtWorks = await artWorkService.getArtWorkByIdService(req.params.id, validUser.id);
         if ('error' in getArtWorks) {
             return res.status(406).json({ error: getArtWorks.error.toString() });
         }
