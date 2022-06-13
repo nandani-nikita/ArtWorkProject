@@ -126,7 +126,7 @@ export default function SinglePost() {
         )}
       </div>
       {post.commentData &&
-      <AllComments comments={post.commentData.comments} /> }
+      <AllComments postId={post.id} commentData={post.commentData} /> }
       <Comment post={post} />
     </div>
   );

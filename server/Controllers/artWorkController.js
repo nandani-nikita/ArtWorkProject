@@ -72,8 +72,9 @@ const deleteMyArtWork = async (req, res) => {
 
 const getAllArtWorks = async (req, res) => {
     try {
-
-        const getArtWorks = await artWorkService.getAllArtWorkService();
+        const validUser = await verifyToken(req.headers['authorization']);
+        const getArtWorks = await artWorkService.getAllArtWorkService(validUser.id);
+        
         if ('error' in getArtWorks) {
             return res.status(406).json({ error: getArtWorks.error.toString() });
         }

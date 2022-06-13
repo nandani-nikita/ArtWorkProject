@@ -80,3 +80,8 @@
     margin-top: 20px;
     cursor: pointer;
 }
+
+input::placeholder {
+ font-size: 22px; 
+ color: teal;
+}

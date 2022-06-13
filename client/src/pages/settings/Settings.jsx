@@ -44,8 +44,9 @@ export default function Settings() {
     <div className="settings">
       <div className="settingsWrapper">
         <div className="settingsTitle">
-          <span className="settingsUpdateTitle">Update Your Account</span>
-          <span className="settingsDeleteTitle">Delete Account</span>
+          <span className="settingsUpdateTitle">My Info</span>
+          {/* <span className="settingsUpdateTitle">Update Your Account</span> */}
+          {/* <span className="settingsDeleteTitle">Delete Account</span> */}
         </div>
         <form className="settingsForm" onSubmit={handleSubmit}>
           <label>Profile Picture</label>
@@ -54,7 +55,7 @@ export default function Settings() {
               src={file ? URL.createObjectURL(file) : user.profilePicture}
               alt=""
             />
-            <label htmlFor="fileInput">
+            {/* <label htmlFor="fileInput">
               <i className="settingsPPIcon far fa-user-circle"></i>
             </label>
             <input
@@ -62,26 +63,27 @@ export default function Settings() {
               id="fileInput"
               style={{ display: "none" }}
               onChange={(e) => setFile(e.target.files[0])}
-            />
+            /> */}
           </div>
           <label>Username</label>
           <input
             type="text"
-            placeholder={user.username}
-            onChange={(e) => setUsername(e.target.value)}
+            placeholder={user.name}
+            disabled
           />
           <label>Email</label>
           <input
             type="email"
             placeholder={user.email}
-            onChange={(e) => setEmail(e.target.value)}
+            disabled
           />
-          <label>Password</label>
+          <label>Phone Number</label>
           <input
-            type="password"
-            onChange={(e) => setPassword(e.target.value)}
+            type="text"
+            placeholder={user.phone}
+            disabled
           />
-          <button className="settingsSubmit" type="submit">
+          {/* <button className="settingsSubmit" type="submit">
             Update
           </button>
           {success && (
@@ -90,7 +92,7 @@ export default function Settings() {
             >
               Profile has been updated...
             </span>
-          )}
+          )} */}
         </form>
       </div>
       {/* <Sidebar /> */}

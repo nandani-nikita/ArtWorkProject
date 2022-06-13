@@ -5,6 +5,7 @@ import AllComments from "../comment/AllComments";
 
 export default function Post({ post }) {
   // console.log(post);
+  // console.log('==============');
   return (
     <div className="post">
       {post.art_work && <img className="postImg" src={post.art_work} alt="img" />}
@@ -20,7 +21,7 @@ export default function Post({ post }) {
       </div>
       <p className="postDesc">{post.description}</p>
       <hr />
-      <AllComments post={post} />
+      <AllComments postId={post.id} commentData={post.commentData} />
       <Comment post={post} />
     </div>
   );

@@ -48,13 +48,18 @@ async function uploadArtWorkService(user, body, files) {
         return { error: e.toString() }
     }
 }
-async function getAllArtWorkService() {
+async function getAllArtWorkService(userId) {
     try {
-        const artWorks = await conn.query(`SELECT * FROM arts ORDER BY uploaded_on DESC`);
-
+        const artData = await conn.query(`SELECT * FROM arts ORDER BY uploaded_on DESC`);
+        const artWorks = [];
+        for(let i=0; i<artData.rowCount;i++){
+            let data = await getArtWorkByIdService(artData.rows[i].id, userId);
+            artWorks.push(data.data);
+        }
+        // console.log(artWorks);
         return {
             msg: 'Art Works Found',
-            data: artWorks.rows
+            data: artWorks
         };
 
     } catch (e) {
@@ -65,7 +70,7 @@ async function getAllArtWorkService() {
 async function getArtWorkByIdService(artId, userId = null) {
     try {
         const artWork = (await conn.query(`SELECT * FROM arts WHERE id='${artId}'`)).rows[0];
-        console.log(userId);
+        // console.log(userId);
         const commentData = await commentService.getArrangedComments(artId, userId);
         Object.assign(artWork, { commentData: commentData });
         const authorInfo = await userService.getUserDetailsService(artWork.uploaded_by);

@@ -2,71 +2,50 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Context } from "../../context/Context";
 import { FaHeart } from "react-icons/fa";
-const AllComments = ({ comments }) => {
+const AllComments = ({ postId, commentData }) => {
     const { user } = useContext(Context);
-    // console.log(post.authorInfo);
-    console.log("being fired", comments);
-    // const [comments, setComments] = useState(post.commentData.comments);
+    console.log("=\n", commentData);
+    const [comments, setComments] = useState(commentData.comments);
 
-    // const [commentCount, setCommentCount] = useState(post.commentData.commentsCount);
-    // const [likeCount, setLikeCount] = useState(post.commentData.likesCount);
-    // const [avgStars, setAvgStars] = useState(post.commentData.ratings);
-    // const [isLiked, setIsLiked] = useState(post.commentData.likeStatus);
 
+    const [commentCount, setCommentCount] = useState(commentData.commentsCount);
+    const [likeCount, setLikeCount] = useState(commentData.likesCount);
+    const [avgStars, setAvgStars] = useState(commentData.ratings);
+    const [isLiked, setIsLiked] = useState(commentData.likeStatus);
+    // const [commentCount, setCommentCount] = useState(0);
+    // const [likeCount, setLikeCount] = useState(0);
+    // const [avgStars, setAvgStars] = useState(0.0);
+    // const [isLiked, setIsLiked] = useState(false);
     // useEffect(() => {
-    //     async function getComments() {
-    //         try {
-    //             console.log(post.id);
-    //             const auth = user ? `Bearer ${user.token}` : null;
-    //             const allComments = (await axios.post("http://localhost:8080/react/all-comments", {
-    //                 artId: post.id,
-    //             }, {
-    //                 headers: {
-    //                     "authorization": auth
-    //                 }
-    //             })).data;
-    //             const commentData = allComments.comments;
-    //             for (let ele in commentData) {
-    //                 const authorInfo = await axios.get("http://localhost:8080/user/" + commentData[ele].comment_by);
+    //     console.log(']]]]]]]]]]]]]]]]]');
+    //     console.log(commentData);
+    //     setCommentCount(commentData.commentsCount);
+    //     setLikeCount(commentData.likesCount);
+    //     setAvgStars(commentData.ratings);
+    //     setIsLiked(commentData.likeStatus)
+    // }, [postId, commentData, isLiked])
 
-    //                 Object.assign(commentData[ele], authorInfo)
-    //             }
-    //             console.log(commentData);
-    //             setComments(commentData);
-    //             setCommentCount(allComments.commentsCount);
-    //             setLikeCount(allComments.likesCount);
-    //             setAvgStars(allComments.ratings);
-    //             setIsLiked(allComments.likeStatus && allComments.likeStatus)
-
-    //         } catch (err) {
-    //             console.log(err.response);
-    //         }
-    //     }
-
-    //     getComments();
-    // }, [post.id, user, isLiked])
-
-    // const handleLikeChange = async () => {
-    //     const isLikedStatus = isLiked ? false : true
-    //     try {
-    //         await axios.post("http://localhost:8080/react/like/", {
-    //             artId: post.id
-    //         }, {
-    //             headers: {
-    //                 "authorization": `Bearer ${user.token}`
-    //             }
-    //         });
-    //         setIsLiked(isLikedStatus);
-    //         // window.location.reload(true);
-    //     } catch (error) {
-    //         console.log(error.response);
-    //     }
-    // }
+    const handleLikeChange = async () => {
+        const isLikedStatus = isLiked ? false : true
+        try {
+            await axios.post("http://localhost:8080/react/like/", {
+                artId: postId
+            }, {
+                headers: {
+                    "authorization": `Bearer ${user.token}`
+                }
+            });
+            setIsLiked(isLikedStatus);
+            // window.location.reload(true);
+        } catch (error) {
+            console.log(error.response);
+        }
+    }
 
     return (
         // <>hi</>
         <div className="comment">
-            {/* <div className="reaction-status">
+            <div className="reaction-status">
                 <span id="commentCount">{commentCount}{commentCount > 1 ? ' Comments' : ' Comment'}</span>
                 <span id="likeCount">{likeCount}{likeCount > 1 ? ' Likes' : ' Like'}</span>
                 <span id="starsCount">{avgStars}{avgStars > 1 ? ' Stars' : ' Star'}</span>
@@ -77,17 +56,17 @@ const AllComments = ({ comments }) => {
                         onClick={handleLikeChange}
                     />
                 </span>}
-            </div> */}
+            </div>
             {comments && comments.map((comment) =>
                 <div className="commentSection" key={comment.id}>
 
                     <cite className="commentText">
                         {comment.comment}
                     </cite>
-                    <span className="commentAuthor"> ...Says, {comment.commentPersonName ? comment.commentPersonName : 'Annonymus'}</span> 
+                    <span className="commentAuthor"> ...Says, {comment.commentPersonName ? comment.commentPersonName : 'Annonymus'}</span>
 
                 </div>
-            )} 
+            )}
         </div>
     )
 }
