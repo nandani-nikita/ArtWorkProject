@@ -14,7 +14,7 @@ const StarRating = ({ postId, commentData }) => {
     }, [postId, commentData])
     const handleStars = async (index) => {
         try {
-            const setStars = await axios.post("http://localhost:8080/react/rate", {
+            const setStars = await axios.post("http://3.110.154.209:8080/react/rate", {
                 artId: postId,
                 rating: parseInt(index)
             }, {

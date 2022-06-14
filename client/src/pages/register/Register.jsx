@@ -27,7 +27,7 @@ export default function Register() {
     formdata.append('profilePicture', file);
 
     try {
-      const res = await axios.post("http://localhost:8080/user/new", formdata, {
+      const res = await axios.post("http://3.110.154.209:8080/user/new", formdata, {
         headers: {
           "Content-Type": "multipart/form-data",
         }

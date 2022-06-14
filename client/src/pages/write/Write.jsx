@@ -23,7 +23,7 @@ export default function Write() {
       formdata.append("artWork", file);
       newPost.photo = file;
       try {
-        await axios.post("http://localhost:8080/art/new",formdata, { headers: {
+        await axios.post("http://3.110.154.209:8080/art/new",formdata, { headers: {
           "Content-Type": "multipart/form-data",
           "authorization":`Bearer ${user.token}`
         }});

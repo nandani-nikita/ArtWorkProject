@@ -13,7 +13,7 @@ const Comment = ({ post }) => {
         e.preventDefault();
 
         try {
-            await axios.post("http://localhost:8080/react/comment/", {
+            await axios.post("http://3.110.154.209:8080/react/comment/", {
                 artId: post.id,
                 comment: comment
             }, {

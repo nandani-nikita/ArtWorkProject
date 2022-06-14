@@ -21,7 +21,7 @@ export default function SinglePost() {
 
     const getPost = async () => {
       const auth = user ? `Bearer ${user.token}` : null;
-      const res = (await axios.get("http://localhost:8080/art/" + path,
+      const res = (await axios.get("http://3.110.154.209:8080/art/" + path,
         {
           headers: {
             "authorization": auth
@@ -37,7 +37,7 @@ export default function SinglePost() {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8080/art/del/${post.id}`, {
+      await axios.delete(`http://3.110.154.209:8080/art/del/${post.id}`, {
         headers: {
           "authorization": `Bearer ${user.token}`
         }

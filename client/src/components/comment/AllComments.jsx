@@ -16,7 +16,7 @@ const AllComments = ({ postId, commentData }) => {
     const handleLikeChange = async () => {
         const isLikedStatus = isLiked ? false : true
         try {
-            await axios.post("http://localhost:8080/react/like/", {
+            await axios.post("http://3.110.154.209:8080/react/like/", {
                 artId: postId
             }, {
                 headers: {

@@ -13,7 +13,7 @@ export default function Login() {
     e.preventDefault();
     dispatch({ type: "LOGIN_START" });
     try {
-      const res = await axios.post("http://localhost:8080/user/sign-in", {
+      const res = await axios.post("http://3.110.154.209:8080/user/sign-in", {
         username: userRef.current.value,
         password: passwordRef.current.value,
       });

@@ -12,7 +12,7 @@ export default function Home() {
   useEffect(() => {
     const fetchPosts = async () => {
       const auth = user ? `Bearer ${user.token}` : null
-      const res = await axios.get("http://localhost:8080/art/all", {
+      const res = await axios.get("http://3.110.154.209:8080/art/all", {
         headers: {
           'authorization': auth
         }
