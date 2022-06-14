@@ -17,11 +17,9 @@ export default function SinglePost() {
   const [author, setAuthor] = useState('');
 
 
-
   useEffect(() => {
 
     const getPost = async () => {
-      // console.log(path, "pathhh");
       const auth = user ? `Bearer ${user.token}` : null;
       const res = (await axios.get("http://localhost:8080/art/" + path,
         {
@@ -29,15 +27,9 @@ export default function SinglePost() {
             "authorization": auth
           }
         })).data;
-      // console.log(res.data);
-      // console.log(res.data.description);
       setPost(res.data);
       setTitle(res.data.caption);
       setDesc(res.data.description);
-      // console.log(post.uploaded_by);
-      // console.log(res.data.authorInfo);
-      // const getAuthor = res.data.authorInfo.name;
-      // console.log(getAuthor.data);
       setAuthor(res.data.authorInfo.name);
     };
     getPost();
@@ -55,17 +47,6 @@ export default function SinglePost() {
     } catch (err) {
       alert(err.response ? err.response.data.error : 'Some Error Occurred. Please Try Again.');
     }
-  };
-
-  const handleUpdate = async () => {
-    try {
-      await axios.put(`/posts/${post._id}`, {
-        uploaded_by: user.id,
-        title,
-        desc,
-      });
-      setUpdateMode(false)
-    } catch (err) { }
   };
 
   return (
@@ -87,10 +68,7 @@ export default function SinglePost() {
             {title}
             {post.uploaded_by === user?.id && (
               <div className="singlePostEdit">
-                <i
-                  className="singlePostIcon far fa-edit"
-                  onClick={() => setUpdateMode(true)}
-                ></i>
+
                 <i
                   className="singlePostIcon far fa-trash-alt"
                   onClick={handleDelete}
@@ -119,14 +97,10 @@ export default function SinglePost() {
         ) : (
           <p className="singlePostDesc">{desc}</p>
         )}
-        {updateMode && (
-          <button className="singlePostButton" onClick={handleUpdate}>
-            Update
-          </button>
-        )}
+
       </div>
       {post.commentData &&
-      <AllComments postId={post.id} commentData={post.commentData} /> }
+        <AllComments postId={post.id} commentData={post.commentData} />}
       <Comment post={post} />
     </div>
   );

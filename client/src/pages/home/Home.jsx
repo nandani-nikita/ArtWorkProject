@@ -8,14 +8,13 @@ import axios from "axios";
 import { Context } from "../../context/Context";
 export default function Home() {
   const [posts, setPosts] = useState([]);
-  // const { search } = useLocation();
   const { user } = useContext(Context);
   useEffect(() => {
     const fetchPosts = async () => {
-      const auth = user ? `Bearer ${user.token}` : null 
+      const auth = user ? `Bearer ${user.token}` : null
       const res = await axios.get("http://localhost:8080/art/all", {
         headers: {
-          'authorization':auth
+          'authorization': auth
         }
       });
       setPosts(res.data.data);
@@ -27,7 +26,6 @@ export default function Home() {
       <Header />
       <div className="home">
         <Posts posts={posts} />
-        {/* <Sidebar /> */}
       </div>
     </>
   );

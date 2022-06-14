@@ -1,15 +1,16 @@
 button {
-    background-color: transparent;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    font-size: 30px;
-    padding-left: 2vw;
-  }
-  .on {
-    color: teal;
-  }
-  .off {
-    color: #ccc;
-  }
-  
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 30px;
+  padding-left: 2vw;
+}
+
+.on {
+  color: teal;
+}
+
+.off {
+  color: #ccc;
+}

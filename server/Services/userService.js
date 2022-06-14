@@ -44,7 +44,6 @@ async function signInService(body) {
 async function registerUserService(body, files) {
     try {
         const checkExistingUser = await conn.query(`SELECT * FROM users WHERE email='${body.email}'`);
-        console.log(checkExistingUser);
         if (checkExistingUser.rows.length === 0) {
             var fileLocation = null;
             const id = uuidv4();
@@ -61,7 +60,6 @@ async function registerUserService(body, files) {
                 }
 
                 var s3upload = await s3.upload(params).promise();
-                console.log(s3upload);
                 fileLocation = s3upload.Location;
             }
             const signUpMedium = ((body.signUpMedium && (body.signUpMedium).toLowerCase() === 'google') ? 'google' : 'inapp')
@@ -94,9 +92,7 @@ async function registerUserService(body, files) {
 
 async function getUserDetailsService(userId) {
     try {
-        // console.log(userId);
         const checkExistingUser = (await conn.query(`SELECT * FROM users WHERE id='${userId}'`)).rows;
-        // console.log(checkExistingUser);
         if (checkExistingUser.length) {
             const user = checkExistingUser[0];
 

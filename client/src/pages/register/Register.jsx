@@ -2,7 +2,6 @@ import axios from "axios";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./register.css";
-// import {FormData} from 'form-data';
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -27,10 +26,6 @@ export default function Register() {
     formdata.append('gender', gender);
     formdata.append('profilePicture', file);
 
-    for (var pair of formdata.entries()) {
-      console.log(pair[0] + ', ' + pair[1]);
-    }
-    // console.log(name,gender, email, password, dob, mobile, file);
     try {
       const res = await axios.post("http://localhost:8080/user/new", formdata, {
         headers: {
@@ -40,9 +35,6 @@ export default function Register() {
       res.data && window.location.replace("/login");
     } catch (err) {
       console.log(err);
-      // console.log(res.error);
-      // console.log(res.msg);
-      // console.log(err);
       alert(err.response ? err.response.data.error : 'Some Error Occurred. Please Try Again.');
       setError(true);
     }
@@ -56,31 +48,41 @@ export default function Register() {
           type="text"
           className="registerInput"
           placeholder="Enter your name..."
+          required
           onChange={(e) => setName(e.target.value)}
         />
         <label>Gender</label>
-        <input
-          type="radio"
-          // className="registerInput"
-          // placeholder="Enter your name..."
-          name="gender"
-          value="Male"
-          onChange={(e) => setGender(e.target.value)}
-        /> <label>Male</label>
-        <input
-          type="radio"
-          // className="registerInput"
-          // placeholder="Enter your name..."
-          name="gender"
-          value="Female"
-          onChange={(e) => setGender(e.target.value)}
-        /> <label>Female</label>
+        <div className="genderDiv">
+          <input
+            type="radio"
+            className="registerInput"
+            name="gender"
+            value="Male"
+            required
+            onChange={(e) => setGender(e.target.value)
+            }
+
+          /> <label>Male</label>
+          &nbsp;&nbsp;
+          <input
+            type="radio"
+            className="registerInput"
+            name="gender"
+            value="Female"
+
+            onChange={(e) => setGender(e.target.value)}
+
+          /> <label>Female</label>
+        </div>
+
+
 
         <label>Email</label>
         <input
-          type="text"
+          type="email"
           className="registerInput"
           placeholder="Enter your email..."
+          required
           onChange={(e) => setEmail(e.target.value)}
         />
         <label>Mobile</label>
@@ -88,6 +90,7 @@ export default function Register() {
           type="number"
           className="registerInput"
           placeholder="Enter your phone number..."
+          required
           onChange={(e) => setMobile(e.target.value)}
         />
         <label>DOB</label>
@@ -95,6 +98,7 @@ export default function Register() {
           type="datetime"
           className="registerInput"
           placeholder="Enter your dob..."
+          required
           onChange={(e) => setDob(e.target.value)}
         />
         <label>Password</label>
@@ -102,6 +106,7 @@ export default function Register() {
           type="password"
           className="registerInput"
           placeholder="Enter your password..."
+          required
           onChange={(e) => setPassword(e.target.value)}
         />
         <label>Profile Picture</label>
@@ -109,6 +114,7 @@ export default function Register() {
           type="file"
           className="registerInput"
           placeholder="Select Profile Picture"
+          required
           onChange={(e) => setFile(e.target.files[0])}
         />
         <button className="registerButton" type="submit">

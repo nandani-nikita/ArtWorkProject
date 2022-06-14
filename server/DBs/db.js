@@ -10,7 +10,5 @@ const conn = new Client({
   port     : process.env.RDS_POST
 });
 
-
 // conn.end();
-
 module.exports = {conn}

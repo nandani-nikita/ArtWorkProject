@@ -59,9 +59,7 @@ const registerUser = async (req, res) => {
             });
         }
 
-
         let checkValidName = utility.isValidTextContent(req.body.name);
-        console.log('hi');
         if (!checkValidName) {
             return res.status(406).json({
                 error: "Invalid Name String"

@@ -29,8 +29,6 @@ async function uploadArtWorkService(user, body, files) {
 
         const dateString = new Date(Date.now());
         const date = dateString.toLocaleDateString() + " " + dateString.toLocaleTimeString();
-        console.log(date);
-        const time = dateString.toTimeString();
 
         const insertColumns = `id, art_work, caption, description, uploaded_by, uploaded_on`;
 
@@ -56,7 +54,6 @@ async function getAllArtWorkService(userId) {
             let data = await getArtWorkByIdService(artData.rows[i].id, userId);
             artWorks.push(data.data);
         }
-        // console.log(artWorks);
         return {
             msg: 'Art Works Found',
             data: artWorks
@@ -70,12 +67,10 @@ async function getAllArtWorkService(userId) {
 async function getArtWorkByIdService(artId, userId = null) {
     try {
         const artWork = (await conn.query(`SELECT * FROM arts WHERE id='${artId}'`)).rows[0];
-        // console.log(userId);
         const commentData = await commentService.getArrangedComments(artId, userId);
         Object.assign(artWork, { commentData: commentData });
         const authorInfo = await userService.getUserDetailsService(artWork.uploaded_by);
         Object.assign(artWork, { authorInfo: authorInfo });
-        // console.log(artWork);
         return {
             msg: 'Art Work Found',
             data: artWork

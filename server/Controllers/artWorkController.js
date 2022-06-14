@@ -88,36 +88,7 @@ const getAllArtWorks = async (req, res) => {
         return res.status(406).json({ error: error });
     }
 };
-const getTrendingArtWorks = async (req, res) => {
-    try {
-        res.status(200).json({ msg: "App started" });
 
-    } catch (error) {
-        console.log("Error: ", error);
-        res.status(406).json({ error: error });
-    }
-};
-const getMyArtWorks = async (req, res) => {
-    try {
-        const validUser = await verifyToken(req.headers['authorization']);
-        if (!(validUser || validUser.id)) {
-            return res.status(406).json({ error: "Unauthorized User" });
-        }
-
-        const getArtWorks = await artWorkService.getMyArtWorkService(validUser);
-        if ('error' in getArtWorks) {
-            return res.status(406).json({ error: getArtWorks.error.toString() });
-        }
-        return res.status(200).json({
-            msg: getArtWorks.msg,
-            data: getArtWorks.data
-        });
-
-    } catch (error) {
-        console.log("Error: ", error);
-        return res.status(406).json({ error: error });
-    }
-};
 const getArtWorkById = async (req, res) => {
     try {
         const validUser = await verifyToken(req.headers['authorization']);
@@ -142,7 +113,5 @@ module.exports = {
     uploadNew,
     deleteMyArtWork,
     getAllArtWorks,
-    getTrendingArtWorks,
-    getMyArtWorks,
     getArtWorkById
 }

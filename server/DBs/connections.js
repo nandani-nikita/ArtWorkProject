@@ -12,9 +12,7 @@ conn.connect(function (err) {
 
 const createFunction = async (createTableQuery) => {
   try {
-    // console.log('creating table');
     await conn.query(createTableQuery);
-    // console.log('Table Created');
 
   } catch (e) {
     console.log('error: ', e);
@@ -24,12 +22,9 @@ const createFunction = async (createTableQuery) => {
 const findFunction = async (findQuery) => {
   try {
     var data = await conn.query(findQuery);
-    // console.log('Table exists', data.rows);
-    // console.log('finding', data.rows);
     return data.rows;
   } catch (e) {
-    console.log('error occured while finding table');
-    // console.log(e);
+    console.log('error occured while finding table, ', e);
     return null;
   }
 
@@ -61,9 +56,6 @@ const createArtsTable = `
       description TEXT,
 	    uploaded_by uuid NOT NULL,
       uploaded_on TIMESTAMPTZ NOT NULL,
-      likes_count INTEGER DEFAULT 0 CHECK (likes_count>= 0),
-      comments_count INTEGER DEFAULT 0 CHECK (comments_count>= 0),
-	    average_ratings FLOAT(2) DEFAULT 0 CHECK (average_ratings>= 0),
       CONSTRAINT fk_uploaded_by
         FOREIGN KEY(uploaded_by) 
 	        REFERENCES users(id)
@@ -114,54 +106,38 @@ const createlikesAndRatingsTable = `
 const checkLikesRatingsExists = `SELECT * FROM likes_ratings`;
 
 findFunction(checkUsersExists).then(data => {
-  // console.log(data);
   if (data !== null) {
-    // console.log('users Table exists');
   } else {
-    // console.log('Creating Table...users');
     createFunction(createUserTable);
   }
 }).catch(reject => {
-  console.log('Rejected');
   console.log(reject);
 })
 
 findFunction(checkArtsExists).then(data => {
-  // console.log(data);
   if (data !== null) {
-    // console.log('Arts Table exists');
   } else {
-    // console.log('Creating Table...arts');
     createFunction(createArtsTable);
   }
 }).catch(reject => {
-  console.log('Rejected');
   console.log(reject);
 });
 
 findFunction(checkCommentsExists).then(data => {
-  // console.log(data);
   if (data !== null) {
-    // console.log('Comments Table exists');
   } else {
-    // console.log('Creating Table...comments');
     createFunction(createCommentsTable);
   }
 }).catch(reject => {
-  console.log('Rejected');
   console.log(reject);
 });
 
 findFunction(checkLikesRatingsExists).then(data => {
-  // console.log(data);
   if (data !== null) {
-    // console.log('Likes_Ratings Table exists');
   } else {
-    // console.log('Creating Table...likes_ratings');
     createFunction(createlikesAndRatingsTable);
   }
 }).catch(reject => {
-  console.log('Rejected');
   console.log(reject);
 });
 
@@ -170,43 +146,34 @@ const insertFunction = async () => {
 
   try {
     const password = (await hashPassword("Nicks@10"));
-    // console.log(password);
     const insertSuperUser = `insert into users (name, email, gender, dob, phone, password) values ('Nikita Nandani', 'nikita@bdec.in','female', '1996-01-25', '6202878654', '${password}' );`
 
-          await conn.query(insertSuperUser, (err) => {
-              if (!err) {
-                // console.log('data added');
-                return 'Inserted'
-              } else {
-                  console.log('error occured: ', err);
-              }
-          });
+    await conn.query(insertSuperUser, (err) => {
+      if (!err) {
+        return 'Inserted'
+      } else {
+        console.log('error occured: ', err);
+      }
+    });
 
   } catch (e) {
-      console.log('error: ', e);
-      return null;
+    console.log('error: ', e);
+    return null;
   }
 
 }
 findFunction(checkUsersExists).then(data => {
-  // console.log(data);
   if (data !== null) {
-    // console.log('users Table exists, data: ', data);
-    if(data.length === 0) {
-      insertFunction().then((result,err)=>{
-        if(result) {
-          // console.log("result",result);
+    if (data.length === 0) {
+      insertFunction().then((result, err) => {
+        if (result) {
         }
-        if(err) {
-          console.log("err",err);
+        if (err) {
+          console.log("err", err);
         }
       });
     }
   }
 }).catch(reject => {
-  console.log('Rejected');
   console.log(reject);
 })
-
-
-// insertFunction()

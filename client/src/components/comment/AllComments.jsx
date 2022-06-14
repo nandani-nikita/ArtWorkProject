@@ -12,18 +12,6 @@ const AllComments = ({ postId, commentData }) => {
     const [likeCount, setLikeCount] = useState(commentData.likesCount);
     const [avgStars, setAvgStars] = useState(commentData.ratings);
     const [isLiked, setIsLiked] = useState(commentData.likeStatus);
-    // const [commentCount, setCommentCount] = useState(0);
-    // const [likeCount, setLikeCount] = useState(0);
-    // const [avgStars, setAvgStars] = useState(0.0);
-    // const [isLiked, setIsLiked] = useState(false);
-    // useEffect(() => {
-    //     console.log(']]]]]]]]]]]]]]]]]');
-    //     console.log(commentData);
-    //     setCommentCount(commentData.commentsCount);
-    //     setLikeCount(commentData.likesCount);
-    //     setAvgStars(commentData.ratings);
-    //     setIsLiked(commentData.likeStatus)
-    // }, [postId, commentData, isLiked])
 
     const handleLikeChange = async () => {
         const isLikedStatus = isLiked ? false : true
@@ -36,14 +24,14 @@ const AllComments = ({ postId, commentData }) => {
                 }
             });
             setIsLiked(isLikedStatus);
-            // window.location.reload(true);
+
+            window.location.reload(true);
         } catch (error) {
             console.log(error.response);
         }
     }
 
     return (
-        // <>hi</>
         <div className="comment">
             <div className="reaction-status">
                 <span id="commentCount">{commentCount}{commentCount > 1 ? ' Comments' : ' Comment'}</span>

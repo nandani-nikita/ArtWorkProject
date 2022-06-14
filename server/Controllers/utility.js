@@ -52,7 +52,7 @@ const isValidFile = function (avatar) {
 }
 
 const isValidTextContent = function (textData) {
-    const regexp = /^[ A-Za-z0-9_@.!#&()]*$/;
+    const regexp = /^[ A-Za-z0-9,_@.!#&()]*$/;
 
     return regexp.test(textData);
 }
@@ -62,7 +62,6 @@ const isValidUuid = function (uuid) {
     return regexp.test(uuid);
 }
 const isValidRates = function (rating) {
-    console.log("wdfcwd",typeof(rating), Number.isInteger(rating));
     if(Number.isInteger(rating) && rating>0 && rating<=5) {
         return true;
     }

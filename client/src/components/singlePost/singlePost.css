@@ -1,6 +1,6 @@
 .singlePost {
   flex: 9;
-  
+
 }
 
 .singlePostWrapper {
@@ -14,7 +14,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 75vw;
+  width: 100%;
+  /* width: 75vw; */
   height: 65vh;
   border-radius: 5px;
   object-fit: contain;
@@ -22,7 +23,8 @@
 
 .singlePostTitle {
   text-align: center;
-  margin: 10px;
+  /* margin: 10px; */
+  margin-top: 1vh;
   font-family: "Lora", serif;
   font-size: 28px;
 }
@@ -90,6 +92,7 @@
 .singlePostDescInput:focus {
   outline: none;
 }
+
 .singlePostButton {
   width: 100px;
   border: none;

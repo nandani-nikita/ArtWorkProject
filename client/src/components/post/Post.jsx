@@ -4,13 +4,11 @@ import Comment from "../comment/Comment";
 import AllComments from "../comment/AllComments";
 
 export default function Post({ post }) {
-  // console.log(post);
-  // console.log('==============');
   return (
     <div className="post">
       {post.art_work && <img className="postImg" src={post.art_work} alt="img" />}
       <div className="postInfo">
-        
+
         <Link to={`/post/${post.id}`} className="link">
           <span className="postTitle">{post.caption}</span>
         </Link>

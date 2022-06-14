@@ -10,7 +10,6 @@ async function getMyComments(userId, artId) {
             comments.push(data[i]);
         }
         const ratingsData = (await conn.query(`SELECT * FROM likes_ratings WHERE art_id='${artId}' AND user_id='${userId}';`)).rows[0];
-        // console.log(ratingsData);
 
 
         return {
@@ -76,7 +75,6 @@ async function appendUserDetailsToComments(commentArr) {
 
                 const userInfo = await userService.getUserDetailsService(commentArr[i].comment_by);
                 commentArr[i]['commentPersonName'] = userInfo.name;
-                // console.log(userInfo);
             }
         }
 
@@ -121,21 +119,16 @@ async function handleLike(user, body) {
     try {
 
         const alreadyLiked = (await conn.query(`SELECT * FROM likes_ratings WHERE user_id='${user.id}' AND art_id='${body.artId}'`)).rows;
-        // console.log(alreadyLiked);
         var likeStatus = true;
 
         if (!alreadyLiked.length) {
-            // console.log('no data');
             const insertColumns = `art_id, user_id, like_status, date`;
             const insertValues = `'${body.artId}', '${user.id}', true, '${new Date(Date.now())}'`
             await conn.query(`INSERT INTO likes_ratings (${insertColumns}) VALUES (${insertValues});`);
         } else {
             likeStatus = alreadyLiked[0].like_status ? false : true;
 
-            // console.log(likeStatus);
-            // console.log('data exists, updating...');
             const updateData = await conn.query(`UPDATE likes_ratings SET like_status=${likeStatus} WHERE art_id='${body.artId}' AND user_id='${user.id}';  `);
-            // console.log(updateData);
         }
 
 
@@ -150,18 +143,14 @@ async function handleRatings(user, body) {
     try {
 
         const alreadyLikedOrRated = (await conn.query(`SELECT * FROM likes_ratings WHERE user_id='${user.id}' AND art_id='${body.artId}'`)).rows;
-        console.log(alreadyLikedOrRated);
 
         if (!alreadyLikedOrRated.length) {
-            console.log('no data');
             const insertColumns = `art_id, user_id, ratings, date`;
             const insertValues = `'${body.artId}', '${user.id}', ${body.rating}, '${new Date(Date.now())}'`
             await conn.query(`INSERT INTO likes_ratings (${insertColumns}) VALUES (${insertValues});`);
         } else {
 
-            console.log('data exists, updating...');
             const updateData = await conn.query(`UPDATE likes_ratings SET ratings=${body.rating} WHERE art_id='${body.artId}';  `);
-            console.log(updateData);
         }
 
 

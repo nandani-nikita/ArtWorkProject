@@ -44,7 +44,6 @@ const rate = async (req, res) => {
             return res.status(406).json({ error: "Ratings must be between 1-5 and of integer type" });
         }
         const handleRatings = await commentService.handleRatings(validUser, req.body);
-        // console.log(handleRatings.error);
         if ('error' in handleRatings) {
             return res.status(406).json({ error: handleRatings.error.toString() });
         }
@@ -77,7 +76,6 @@ const comment = async (req, res) => {
             return res.status(406).json({ error: "Invalid Comment String. Allowed Characters: a-zA-Z0-9 _@.!#&()" });
         }
         const handleComment = await commentService.handleComment(validUser, req.body);
-        // console.log(handleComment.error);
         if ('error' in handleComment) {
             return res.status(406).json({ error: handleComment.error.toString() });
         }
@@ -92,48 +90,8 @@ const comment = async (req, res) => {
     }
 };
 
-// const getAllComments = async (req, res) => {
-//     try {
-//         // console.log(req.body);
-//         // console.log(req.headers)
-//         const checkValidArtWorkId = utility.isValidUuid(req.body.artId);
-//         if (!checkValidArtWorkId) {
-//             return res.status(406).json({ error: "Invalid Art Id" });
-//         }
-//         var data;
-//         const validUser = await verifyToken(req.headers['authorization']);
-//         // console.log('\n\n\n\n, ',validUser);
-//         // if (!(validUser || validUser.id)) {
-//         //     // data = await commentService.getAllComments(req.body.artId);
-//         //     data = await commentService.getArrangedComments(req.body.artId);
-//         // } else {
-//             data = await commentService.getArrangedComments(req.body.artId, validUser.id );
-//         // }
-//         if ('error' in data) {
-//             return res.status(406).json({ error: data.error.toString() });
-//         }
-//         console.log(data);
-//         return res.status(200).json({
-//             msg: data.msg,
-//             comments: data.comments,
-//             commentsCount: data.commentsCount,
-//             likesCount: data.likesCount,
-//             ratings: data.ratings,
-//             likeStatus: data.likeStatus,
-//             myRatings: data.myRatings
-//         });
-
-//     } catch (error) {
-//         console.log("Error: ", error);
-//         return res.status(406).json({ error: error });
-//     }
-// };
-
-
-
 module.exports = {
     like,
     rate,
-    comment,
-    // getAllComments,
+    comment
 }

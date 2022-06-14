@@ -26,7 +26,7 @@ app.use('/art', artWorkRouter);
 app.use('/react', commentRouter);
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`Art-work app listening on port ${port}`);
 });
 
 
