@@ -128,7 +128,7 @@ async function handleLike(user, body) {
         } else {
             likeStatus = alreadyLiked[0].like_status ? false : true;
 
-            const updateData = await conn.query(`UPDATE likes_ratings SET like_status=${likeStatus} WHERE art_id='${body.artId}' AND user_id='${user.id}';  `);
+            await conn.query(`UPDATE likes_ratings SET like_status=${likeStatus} WHERE art_id='${body.artId}' AND user_id='${user.id}';  `);
         }
 
 
@@ -150,7 +150,7 @@ async function handleRatings(user, body) {
             await conn.query(`INSERT INTO likes_ratings (${insertColumns}) VALUES (${insertValues});`);
         } else {
 
-            const updateData = await conn.query(`UPDATE likes_ratings SET ratings=${body.rating} WHERE art_id='${body.artId}';  `);
+            await conn.query(`UPDATE likes_ratings SET ratings=${body.rating} WHERE art_id='${body.artId}' AND user_id='${user.id}';  `);
         }
 
 
